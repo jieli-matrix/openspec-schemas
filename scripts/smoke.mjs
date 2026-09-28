@@ -37,8 +37,8 @@ try {
     if (!instruction || instruction.artifactId !== artifact) {
       throw new Error(`Missing ${artifact} instructions`);
     }
-    if (artifact === 'tasks' && !instruction.instruction?.includes('working skeleton')) {
-      throw new Error('Missing walking-skeleton task guidance');
+    if (artifact === 'tasks' && !instruction.instruction?.includes('supporting')) {
+      throw new Error('Missing supporting-feature task guidance');
     }
   }
   const apply = JSON.parse(run(['instructions', 'apply', '--change', 'sample-change', '--json']));

@@ -2,12 +2,23 @@
 
 ## Context
 
-The to-do list has a user-facing add-item flow and a displayed item count.
+The to-do list needs a small public API for adding items and observing state.
 
 ## Decisions
 
-Use the First item scenario as a walking skeleton: one user-level E2E check drives the add-item entry point through storage to the displayed count. Review the test-facing add-item call and empty-input behavior before implementation. Add integration checks for subsequent additions and input rejection where they give faster, distinct feedback.
+Start with `add_item()` as the focal public method. A test of its first successful call needs `count()` and `empty()` to observe the result. Treat those queries as public features with their own requirements and tests; get their new-list behavior working first. Then run the `add_item()` test red for missing add behavior and implement it through the needed layers. Test another addition after the first case passes.
+
+The intended call shape is:
+
+```text
+items = TodoList()
+items.count()             -> 0
+items.empty()             -> true
+items.add_item("buy milk")
+items.count()             -> 1
+items.empty()             -> false
+```
 
 ## Risks / Trade-offs
 
-- A count could update without retaining the item; the skeleton check observes both the list and count.
+- `count()` and `empty()` could be hardcoded for a new list; the `add_item()` test checks that both change with the list state.

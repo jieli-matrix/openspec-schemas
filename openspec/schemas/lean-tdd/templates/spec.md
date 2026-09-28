@@ -8,7 +8,7 @@
 ### Requirement: AC-1 <!-- short acceptance criterion name -->
 <!-- State one normative, observable rule using SHALL or MUST. Keep cases below separate. -->
 
-#### Scenario: <!-- simplest happy path, named by its behavior -->
+#### Scenario: <!-- simple happy path, named by its behavior -->
 - **GIVEN** <!-- relevant initial state -->
 - **WHEN** <!-- condition -->
 - **THEN** <!-- expected outcome -->
@@ -18,5 +18,7 @@
 - **WHEN** <!-- action -->
 - **THEN** <!-- expected outcome -->
 
-<!-- Use WHEN/THEN alone when setup adds nothing. Preserve full requirement blocks
-     under ## MODIFIED Requirements for an existing capability. -->
+<!-- If a test at the system public API needs a new public query or setup call,
+     specify that supporting observable behavior in its own Requirement block.
+     Do not specify private test helpers. Use WHEN/THEN alone when setup adds
+     nothing. Preserve full blocks under ## MODIFIED Requirements. -->

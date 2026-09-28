@@ -1,6 +1,6 @@
 # Lean TDD schema for OpenSpec
 
-A copyable OpenSpec community schema that starts with a full-path happy-path test, builds a thin working skeleton, and then fleshes out acceptance criteria with distinct cases.
+A copyable OpenSpec community schema that turns a user-facing acceptance criterion into a test at the system public API, grows the public behavior needed to run it, and repeats for the next criterion.
 
 The bundle is forked from OpenSpec's `spec-driven` schema at [`79b6aa9c98f1e36795b2bc4ef2a8f770c6d3a777`](https://github.com/Fission-AI/OpenSpec/commit/79b6aa9c98f1e36795b2bc4ef2a8f770c6d3a777). Its four artifacts and apply tracking are unchanged. The schema is guidance for an agent; OpenSpec does not enforce test order or inspect test results.
 
@@ -28,13 +28,13 @@ After a pilot, optionally set the project default by putting the contents of [`e
 
 ## Workflow
 
-Write each acceptance criterion as one normative `### Requirement:` block. Put short-named `#### Scenario:` cases under it, with the simplest happy path first. The first tracked task runs related existing suites and records preexisting failures. Then use a bones-out approach: write a user-level E2E test that crosses the full relevant path and build only enough code to make that skeleton work. Flesh it out one boundary or error case at a time, reporting each meaningful red failure and rerunning the skeleton and related suites after green.
+Write each user-facing acceptance criterion, often first expressed through the UI, as one normative `### Requirement:` block with short-named `#### Scenario:` cases. The first tracked task runs related existing suites and records preexisting failures. For bones-out development, take a simple happy path and draft a test through the system public API. If that test needs new public queries or setup calls, specify and implement them as features. Then make the focal test pass, rerun related suites, and take the next criterion or distinct case through the same loop. A public API test can cover all relevant implementation layers without a UI or E2E harness.
 
-Use the [testing trophy](https://kentcdodds.com/blog/the-testing-trophy-and-testing-classifications) as a guide: static checks support the work, a few E2E tests cover representative full flows, integration tests check interacting parts, and focused unit tests help with complex logic. Choose each test for the confidence and feedback it adds; there is no required test ratio.
+Use the [testing trophy](https://kentcdodds.com/blog/the-testing-trophy-and-testing-classifications) as a guide: static checks support the work, public API or integration tests check interacting parts, broader E2E tests cover representative flows when useful, and focused unit tests help with complex logic. Choose each test for the confidence and feedback it adds; there is no required test ratio.
 
 ## Validate this repository
 
-The to-do list change in [`examples/sample-change`](examples/sample-change) shows one criterion, a first-item walking skeleton, and two follow-up cases. Run `node scripts/smoke.mjs` from this repository. It creates a disposable consuming project, installs the bundle, validates it and the sample change, resolves instructions for all artifacts, and checks both per-change and project-default selection. The script uses portable Node paths and temporary directories so it can run on Unix or Windows.
+The to-do list change in [`examples/sample-change`](examples/sample-change) starts with `add_item()` and adds `count()` and `empty()` as public features needed to test it. Run `node scripts/smoke.mjs` from this repository. It creates a disposable consuming project, installs the bundle, validates it and the sample change, resolves instructions for all artifacts, and checks both per-change and project-default selection. The script uses portable Node paths and temporary directories so it can run on Unix or Windows.
 
 ## License
 

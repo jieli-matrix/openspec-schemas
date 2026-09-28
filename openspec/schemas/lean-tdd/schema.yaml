@@ -92,7 +92,9 @@ artifacts:
       - Treat each acceptance criterion as one `### Requirement: <short name>` block. An optional stable ID such as AC-1 can precede the name.
       - State the normative rule separately from its cases, using SHALL/MUST (avoid should/may).
       - Group distinct cases under that criterion as `#### Scenario: <short descriptive name>` blocks. Prefer GIVEN/WHEN/THEN; use WHEN/THEN when setup adds no information. File order supplies sequence; scenario numbers are unnecessary.
-      - Put the simplest representative happy path first, then boundary and error cases. This gives implementation a first full-path example before fleshing out details.
+      - Put a simple representative case first, then boundary and error cases.
+      - If testing a focal public operation needs a new public query or setup operation, specify that supporting observable behavior as its own requirement and scenario. Do not add requirements for private test helpers.
+      - Start from user-facing acceptance behavior, even when its executable test targets the system public API instead of a user interface.
       - Each scenario should describe observable behavior that could become a focused automated check. Avoid repeating private implementation paths.
       - **CRITICAL**: Scenarios MUST use exactly 4 hashtags (`####`). Using 3 hashtags or bullets will fail silently.
       - Every requirement MUST have at least one scenario.
@@ -128,22 +130,33 @@ artifacts:
 
       ## Purpose
 
-      Lets users add to-do items and see an accurate count of their current list.
+      Lets callers add to-do items and observe the current list state.
 
       ## ADDED Requirements
 
       ### Requirement: AC-1 Adding an item increases the count
-      The system SHALL increase the count by one for each nonblank item added.
+      The list SHALL increase its count by one for each successful add_item() call.
 
       #### Scenario: First item
-      - **GIVEN** an empty list showing zero items
-      - **WHEN** the user adds a nonblank item
-      - **THEN** the item appears and the count is one
+      - **GIVEN** a new list whose count() is zero and empty() is true
+      - **WHEN** the caller invokes add_item("buy milk")
+      - **THEN** count() is one and empty() is false
 
-      #### Scenario: Another item
-      - **GIVEN** a list showing one item
-      - **WHEN** the user adds another nonblank item
-      - **THEN** both items appear and the count is two
+      ### Requirement: AC-2 Count reports the number of items
+      The list's count() method SHALL report its number of items.
+
+      #### Scenario: New list has zero items
+      - **GIVEN** a newly created list
+      - **WHEN** the caller invokes count()
+      - **THEN** the result is zero
+
+      ### Requirement: AC-3 Empty reports whether the list has items
+      The list's empty() method SHALL be true exactly when its count is zero.
+
+      #### Scenario: New list is empty
+      - **GIVEN** a newly created list
+      - **WHEN** the caller invokes empty()
+      - **THEN** the result is true
       ```
 
       Specs should be testable - each scenario is a potential test case.
@@ -179,8 +192,11 @@ artifacts:
       test boundary when it needs a design decision. Omit the API sketch for
       changes with no relevant public call. If tests expose a missing observable
       rule or awkward API, revise specs and design before proceeding.
-      For a new flow, identify the simplest user-level happy path and the layers
-      it must cross so the first test can drive a thin working skeleton.
+      Start with the user-facing criterion and the public operation it calls for. Sketch the test
+      call and the public queries or setup calls needed to observe its result.
+      Treat any new supporting public behavior as a feature: update specs and
+      design, then plan its tests and implementation before returning to the
+      focal operation. Let the tests drive the necessary lower-level design.
 
       Open questions are for genuinely deferrable unknowns, not decisions you
       skipped. If a question would change the specs, the chosen approach, or
@@ -217,22 +233,24 @@ artifacts:
         to discover test tooling; run existing suites related to the criteria;
         record commands, results, and preexisting failures before new tests or
         implementation. Keep those suites as regression checks throughout.
-      - After the baseline, make the first behavior task a simple happy-path E2E
-        check from the user's entry point through all relevant layers. Build only
-        the thin working skeleton needed to pass it, then add the remaining
-        scenarios and corner cases one at a time. Organize later work by
-        acceptance criterion without treating all its cases as one batch.
-      - Use the testing trophy as a guide: static checks support the work, a
-        few E2E checks cover representative full flows, integration checks cover
-        interacting parts, and focused unit checks cover complex logic where
-        they add distinct feedback. Choose boundaries for confidence and speed,
-        not a mandatory ratio or a particular runner.
+      - After the baseline, choose a user-facing criterion and draft its simple
+        happy-path test through a focal system public API operation. Identify any missing public
+        queries or setup calls needed to assert its outcome. Add their observable
+        contracts to specs and design, then test and implement those supporting
+        features until the focal test can fail for the intended missing behavior.
+        Implement the focal happy path through the necessary layers, then move
+        to the next acceptance criterion or distinct case and repeat the loop.
+      - Use the testing trophy as a guide to choose useful boundaries. A public
+        API test may cover interacting layers without a UI or separate E2E
+        harness. Add a few E2E checks for broader flows when useful, integration
+        checks for interacting parts, focused unit checks for complex logic,
+        and available static checks. Do not prescribe a runner or test ratio.
       - Include test-call API review, a meaningful red run and chat report of its
         command and concise failure, the simplest sound implementation, focused
         and related-suite green runs, and an optional useful refactor after green.
         If a new automated check is impractical, state why and give alternative
         evidence. Include final relevant-suite commands and results in the last
-        criterion task or a broader integration task. Rerun the skeleton check
+        criterion task or a broader integration task. Rerun the focal check
         while fleshing out the feature.
       - When a failure reveals a new observable rule, update criteria, scenarios,
         design, and tasks before continuing. Nearby test comments linking a
@@ -262,14 +280,14 @@ artifacts:
 
       - [ ] 1.1 Run related existing suites and record commands and preexisting failures.
 
-      ## 2. Walking skeleton: AC-1 First item
+      ## 2. Public API and supporting behavior
 
-      - [ ] 2.1 Run a user-level full-path test red for First item and report its failure.
-      - [ ] 2.2 Build the thinnest working path; rerun the skeleton and baseline suites.
+      - [ ] 2.1 Draft the add_item() test and identify count() and empty() as public observations it needs.
+      - [ ] 2.2 Specify, test, and implement count() and empty() as public features; rerun related suites.
 
-      ## 3. Flesh out AC-1: Another item
+      ## 3. Complete AC-1
 
-      - [ ] 3.1 Add a distinct check for Another item, get red then green, and rerun the skeleton and relevant suites.
+      - [ ] 3.1 Run add_item() red for missing behavior, implement it, then rerun focused and related suites.
       ```
 
       Reference specs for what needs to be built, design for how to build it.
@@ -284,22 +302,25 @@ apply:
     Read context files. Complete the existing-suite baseline task first: discover
     project test commands from files, CI, and nearby tests; run related suites;
     record commands, results, and preexisting failures. Retain them for regression.
-    Use a bones-out approach: start with the simplest happy-path scenario from
-    a high-level acceptance criterion. Write one user-level E2E test that
-    exercises the full relevant path from entry point through the lowest
-    necessary layers. Make a thin
-    working skeleton pass before fleshing it out with corner cases. For each
-    remaining scenario, choose an E2E, integration, or unit boundary that adds
-    distinct confidence and useful feedback. The testing trophy is a guide:
-    keep representative full-flow checks few, use integration checks for
-    interactions, focused unit checks for complex logic, and available static
-    checks throughout. Do not impose test counts or a fixed ratio.
-    Sketch only the public API needed by the checks. Review test calls, names,
-    types, and error behavior with available lint and static type checks.
+    Use a bones-out approach: choose a user-facing acceptance criterion, then
+    draft a simple happy-path test through its focal system public API operation.
+    Identify the public
+    queries or setup calls needed to observe its result. If these are new
+    behaviors, add their requirements and scenarios, review their call shapes,
+    and test and implement them as features. Then return to the focal test and
+    confirm it fails for the focal missing behavior. The public API test can
+    exercise all relevant implementation layers without a UI or E2E harness.
+    Use the testing trophy as a guide: add broader E2E checks when useful,
+    integration checks for interacting parts, focused unit checks for complex
+    logic, and available static checks throughout. Do not impose test counts
+    or a fixed ratio. Review test calls, names, types, and error behavior.
     Run a focused check that fails for missing behavior; report the command and
     concise meaningful failure summary in chat. Keep detailed logs only if useful.
-    Implement the simplest sound behavior, then rerun focused checks, the
-    skeleton check, and related existing suites. Refactor after green only when
+    Implement the simplest sound behavior, then rerun the focal check,
+    supporting-feature checks, and related existing suites. Add remaining
+    cases one at a time at useful boundaries. Once the happy path passes, take
+    the next acceptance criterion or distinct case through the same loop.
+    Refactor after green only when
     removing duplication or clarifying structure helps, and rerun affected
     checks. A nearby test comment may link the criterion and short scenario
     name.
