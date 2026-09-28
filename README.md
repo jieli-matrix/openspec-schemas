@@ -28,13 +28,13 @@ After a pilot, optionally set the project default by putting the contents of [`e
 
 ## Workflow
 
-Write each user-facing acceptance criterion, often first expressed through the UI, as one normative `### Requirement:` block with short-named `#### Scenario:` cases. The first tracked task runs related existing suites and records preexisting failures. For bones-out development, take a simple happy path and draft a test through the system public API. If that test needs new public queries or setup calls, specify and implement them as features. Then make the focal test pass, rerun related suites, and take the next criterion or distinct case through the same loop. A public API test can cover all relevant implementation layers without a UI or E2E harness.
+Write each user-facing acceptance criterion, often first expressed through the UI, as one normative `### Requirement:` block with short-named `#### Scenario:` cases. The first tracked task runs related existing suites and records preexisting failures. For bones-out development, take a simple happy path and draft a test through the system public API. If that test needs new public queries or setup calls, specify them as separate public feature requirements marked `**Supports:** <criterion>` and implement them within that criterion's task group. Then make the focal test pass, rerun related suites, and take the next criterion or distinct case through the same loop. A public API test can cover all relevant implementation layers without a UI or E2E harness.
 
 Use the [testing trophy](https://kentcdodds.com/blog/the-testing-trophy-and-testing-classifications) as a guide: static checks support the work, public API or integration tests check interacting parts, broader E2E tests cover representative flows when useful, and focused unit tests help with complex logic. Choose each test for the confidence and feedback it adds; there is no required test ratio.
 
 ## Validate this repository
 
-The to-do list change in [`examples/sample-change`](examples/sample-change) starts with `add_item()` and adds `count()` and `empty()` as public features needed to test it. Run `node scripts/smoke.mjs` from this repository. It creates a disposable consuming project, installs the bundle, validates it and the sample change, resolves instructions for all artifacts, and checks both per-change and project-default selection. The script uses portable Node paths and temporary directories so it can run on Unix or Windows.
+The to-do list change in [`examples/sample-change`](examples/sample-change) starts with AC-1 and `add_item()`. Its `count()` and `empty()` requirements both point back to AC-1, and their tasks stay inside the AC-1 group. Run `node scripts/smoke.mjs` from this repository. It creates a disposable consuming project, installs the bundle, validates it and the sample change, resolves instructions for all artifacts, and checks both per-change and project-default selection. The script uses portable Node paths and temporary directories so it can run on Unix or Windows.
 
 ## License
 

@@ -27,7 +27,8 @@
 <!-- Choose a user-facing acceptance criterion and sketch its test through the
      system public API. Identify the public queries or setup calls needed to
      observe the result; treat new observable behavior as a feature in specs
-     and tasks. Let these tests drive the lower-level design. -->
+     and tasks, explicitly linked to the focal criterion. Let these tests
+     drive the lower-level design. -->
 
 ## Risks / Trade-offs
 

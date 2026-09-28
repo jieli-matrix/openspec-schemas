@@ -89,11 +89,11 @@ artifacts:
       - **RENAMED Requirements**: Name changes only - use FROM:/TO: format
 
       Format requirements:
-      - Treat each acceptance criterion as one `### Requirement: <short name>` block. An optional stable ID such as AC-1 can precede the name.
+      - Treat each user-facing acceptance criterion as one `### Requirement: <short name>` block. An optional stable ID such as AC-1 can precede the name.
       - State the normative rule separately from its cases, using SHALL/MUST (avoid should/may).
       - Group distinct cases under that criterion as `#### Scenario: <short descriptive name>` blocks. Prefer GIVEN/WHEN/THEN; use WHEN/THEN when setup adds no information. File order supplies sequence; scenario numbers are unnecessary.
       - Put a simple representative case first, then boundary and error cases.
-      - If testing a focal public operation needs a new public query or setup operation, specify that supporting observable behavior as its own requirement and scenario. Do not add requirements for private test helpers.
+      - If testing a focal public operation needs a new public query or setup operation, specify that supporting observable behavior as its own requirement and scenario. Put `**Supports:** AC-1 <criterion name>` after its normative SHALL/MUST sentence to show why it was derived; do not give it a peer AC number. Do not add requirements for private test helpers.
       - Start from user-facing acceptance behavior, even when its executable test targets the system public API instead of a user interface.
       - Each scenario should describe observable behavior that could become a focused automated check. Avoid repeating private implementation paths.
       - **CRITICAL**: Scenarios MUST use exactly 4 hashtags (`####`). Using 3 hashtags or bullets will fail silently.
@@ -142,16 +142,18 @@ artifacts:
       - **WHEN** the caller invokes add_item("buy milk")
       - **THEN** count() is one and empty() is false
 
-      ### Requirement: AC-2 Count reports the number of items
+      ### Requirement: Count reports the number of items
       The list's count() method SHALL report its number of items.
+      **Supports:** AC-1 Adding an item increases the count
 
       #### Scenario: New list has zero items
       - **GIVEN** a newly created list
       - **WHEN** the caller invokes count()
       - **THEN** the result is zero
 
-      ### Requirement: AC-3 Empty reports whether the list has items
+      ### Requirement: Empty reports whether the list has items
       The list's empty() method SHALL be true exactly when its count is zero.
+      **Supports:** AC-1 Adding an item increases the count
 
       #### Scenario: New list is empty
       - **GIVEN** a newly created list
@@ -195,7 +197,8 @@ artifacts:
       Start with the user-facing criterion and the public operation it calls for. Sketch the test
       call and the public queries or setup calls needed to observe its result.
       Treat any new supporting public behavior as a feature: update specs and
-      design, then plan its tests and implementation before returning to the
+      design, link it to the focal criterion, then plan its tests and
+      implementation before returning to the
       focal operation. Let the tests drive the necessary lower-level design.
 
       Open questions are for genuinely deferrable unknowns, not decisions you
@@ -236,8 +239,10 @@ artifacts:
       - After the baseline, choose a user-facing criterion and draft its simple
         happy-path test through a focal system public API operation. Identify any missing public
         queries or setup calls needed to assert its outcome. Add their observable
-        contracts to specs and design, then test and implement those supporting
-        features until the focal test can fail for the intended missing behavior.
+        contracts to specs and design with an explicit link to the focal
+        criterion; keep their work under that criterion's task group. Test and
+        implement those supporting features until the focal test can fail for
+        the intended missing behavior.
         Implement the focal happy path through the necessary layers, then move
         to the next acceptance criterion or distinct case and repeat the loop.
       - Use the testing trophy as a guide to choose useful boundaries. A public
@@ -280,14 +285,11 @@ artifacts:
 
       - [ ] 1.1 Run related existing suites and record commands and preexisting failures.
 
-      ## 2. Public API and supporting behavior
+      ## 2. AC-1 Adding an item increases the count
 
       - [ ] 2.1 Draft the add_item() test and identify count() and empty() as public observations it needs.
-      - [ ] 2.2 Specify, test, and implement count() and empty() as public features; rerun related suites.
-
-      ## 3. Complete AC-1
-
-      - [ ] 3.1 Run add_item() red for missing behavior, implement it, then rerun focused and related suites.
+      - [ ] 2.2 Link count() and empty() requirements to AC-1, test and implement them, and rerun related suites.
+      - [ ] 2.3 Run add_item() red for missing behavior, implement it, then rerun focused and related suites.
       ```
 
       Reference specs for what needs to be built, design for how to build it.
@@ -306,8 +308,9 @@ apply:
     draft a simple happy-path test through its focal system public API operation.
     Identify the public
     queries or setup calls needed to observe its result. If these are new
-    behaviors, add their requirements and scenarios, review their call shapes,
-    and test and implement them as features. Then return to the focal test and
+    behaviors, add their requirements and scenarios with an explicit link to
+    the focal criterion. Keep their tasks under that criterion, review their
+    call shapes, and test and implement them as features. Then return to the focal test and
     confirm it fails for the focal missing behavior. The public API test can
     exercise all relevant implementation layers without a UI or E2E harness.
     Use the testing trophy as a guide: add broader E2E checks when useful,

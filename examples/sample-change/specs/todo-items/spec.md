@@ -19,16 +19,18 @@ The list SHALL increase its item count by one for each successful `add_item()` c
 - **WHEN** the caller invokes `add_item("write tests")`
 - **THEN** `count()` is two
 
-### Requirement: AC-2 Count reports the number of items
+### Requirement: Count reports the number of items
 The list's `count()` method SHALL report the number of items it contains.
+**Supports:** AC-1 Adding an item increases the count
 
 #### Scenario: New list has zero items
 - **GIVEN** a newly created list
 - **WHEN** the caller invokes `count()`
 - **THEN** the result is zero
 
-### Requirement: AC-3 Empty reports whether the list has items
+### Requirement: Empty reports whether the list has items
 The list's `empty()` method SHALL be true exactly when its item count is zero.
+**Supports:** AC-1 Adding an item increases the count
 
 #### Scenario: New list is empty
 - **GIVEN** a newly created list
