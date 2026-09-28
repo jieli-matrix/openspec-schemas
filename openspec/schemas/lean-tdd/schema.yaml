@@ -92,6 +92,7 @@ artifacts:
       - Treat each acceptance criterion as one `### Requirement: <short name>` block. An optional stable ID such as AC-1 can precede the name.
       - State the normative rule separately from its cases, using SHALL/MUST (avoid should/may).
       - Group distinct cases under that criterion as `#### Scenario: <short descriptive name>` blocks. Prefer GIVEN/WHEN/THEN; use WHEN/THEN when setup adds no information. File order supplies sequence; scenario numbers are unnecessary.
+      - Put the simplest representative happy path first, then boundary and error cases. This gives implementation a first full-path example before fleshing out details.
       - Each scenario should describe observable behavior that could become a focused automated check. Avoid repeating private implementation paths.
       - **CRITICAL**: Scenarios MUST use exactly 4 hashtags (`####`). Using 3 hashtags or bullets will fail silently.
       - Every requirement MUST have at least one scenario.
@@ -127,22 +128,22 @@ artifacts:
 
       ## Purpose
 
-      Lets users take their data out of the product in a portable format.
+      Lets users add to-do items and see an accurate count of their current list.
 
       ## ADDED Requirements
 
-      ### Requirement: User can export data
-      The system SHALL allow users to export their data in CSV format.
+      ### Requirement: AC-1 Adding an item increases the count
+      The system SHALL increase the count by one for each nonblank item added.
 
-      #### Scenario: Successful export
-      - **WHEN** user clicks "Export" button
-      - **THEN** system downloads a CSV file with all user data
+      #### Scenario: First item
+      - **GIVEN** an empty list showing zero items
+      - **WHEN** the user adds a nonblank item
+      - **THEN** the item appears and the count is one
 
-      ## REMOVED Requirements
-
-      ### Requirement: Legacy export
-      **Reason**: Replaced by new export system
-      **Migration**: Use new export endpoint at /api/v2/export
+      #### Scenario: Another item
+      - **GIVEN** a list showing one item
+      - **WHEN** the user adds another nonblank item
+      - **THEN** both items appear and the count is two
       ```
 
       Specs should be testable - each scenario is a potential test case.
@@ -178,6 +179,8 @@ artifacts:
       test boundary when it needs a design decision. Omit the API sketch for
       changes with no relevant public call. If tests expose a missing observable
       rule or awkward API, revise specs and design before proceeding.
+      For a new flow, identify the simplest user-level happy path and the layers
+      it must cross so the first test can drive a thin working skeleton.
 
       Open questions are for genuinely deferrable unknowns, not decisions you
       skipped. If a question would change the specs, the chosen approach, or
@@ -214,18 +217,23 @@ artifacts:
         to discover test tooling; run existing suites related to the criteria;
         record commands, results, and preexisting failures before new tests or
         implementation. Keep those suites as regression checks throughout.
-      - Organize subsequent work one acceptance criterion at a time, grouping its
-        named scenarios. Identify the highest useful public boundary for behavior
-        tests, the focused check, available lint/type checks, and related existing
-        suites to rerun. Add a few UI checks for UI behavior; add focused unit
-        checks only when they give distinct feedback on complex logic. Do not
-        prescribe a runner or a test-level ratio.
+      - After the baseline, make the first behavior task a simple happy-path E2E
+        check from the user's entry point through all relevant layers. Build only
+        the thin working skeleton needed to pass it, then add the remaining
+        scenarios and corner cases one at a time. Organize later work by
+        acceptance criterion without treating all its cases as one batch.
+      - Use the testing trophy as a guide: static checks support the work, a
+        few E2E checks cover representative full flows, integration checks cover
+        interacting parts, and focused unit checks cover complex logic where
+        they add distinct feedback. Choose boundaries for confidence and speed,
+        not a mandatory ratio or a particular runner.
       - Include test-call API review, a meaningful red run and chat report of its
         command and concise failure, the simplest sound implementation, focused
         and related-suite green runs, and an optional useful refactor after green.
         If a new automated check is impractical, state why and give alternative
         evidence. Include final relevant-suite commands and results in the last
-        criterion task or a broader integration task.
+        criterion task or a broader integration task. Rerun the skeleton check
+        while fleshing out the feature.
       - When a failure reveals a new observable rule, update criteria, scenarios,
         design, and tasks before continuing. Nearby test comments linking a
         criterion and scenario are optional.
@@ -250,16 +258,18 @@ artifacts:
       ```
       # Tasks
 
-      ## 1. Setup
+      ## 1. Existing-suite baseline
 
-      - [ ] 1.1 Create new module structure and verify expected files are present
-      - [ ] 1.2 Add dependencies to package.json and verify package installation succeeds
+      - [ ] 1.1 Run related existing suites and record commands and preexisting failures.
 
-      ## 2. Core Implementation
+      ## 2. Walking skeleton: AC-1 First item
 
-      - [ ] 2.1 Implement data export function and verify the export test passes
-      - [ ] 2.2 Add CSV formatting utilities and verify unit tests cover quoting and delimiters
-      - [ ] 2.3 Document the export API in docs/export.md and verify the documented command runs as written
+      - [ ] 2.1 Run a user-level full-path test red for First item and report its failure.
+      - [ ] 2.2 Build the thinnest working path; rerun the skeleton and baseline suites.
+
+      ## 3. Flesh out AC-1: Another item
+
+      - [ ] 3.1 Add a distinct check for Another item, get red then green, and rerun the skeleton and relevant suites.
       ```
 
       Reference specs for what needs to be built, design for how to build it.
@@ -274,18 +284,25 @@ apply:
     Read context files. Complete the existing-suite baseline task first: discover
     project test commands from files, CI, and nearby tests; run related suites;
     record commands, results, and preexisting failures. Retain them for regression.
-    Work one acceptance criterion and its grouped scenarios at a time. Write
-    behavior-focused checks at the highest useful public API or service boundary.
-    For UI behavior, use a few UI checks; add focused unit checks for complex
-    logic only when they give distinct feedback. Do not impose a fixed test ratio.
+    Use a bones-out approach: start with the simplest happy-path scenario from
+    a high-level acceptance criterion. Write one user-level E2E test that
+    exercises the full relevant path from entry point through the lowest
+    necessary layers. Make a thin
+    working skeleton pass before fleshing it out with corner cases. For each
+    remaining scenario, choose an E2E, integration, or unit boundary that adds
+    distinct confidence and useful feedback. The testing trophy is a guide:
+    keep representative full-flow checks few, use integration checks for
+    interactions, focused unit checks for complex logic, and available static
+    checks throughout. Do not impose test counts or a fixed ratio.
     Sketch only the public API needed by the checks. Review test calls, names,
     types, and error behavior with available lint and static type checks.
     Run a focused check that fails for missing behavior; report the command and
     concise meaningful failure summary in chat. Keep detailed logs only if useful.
-    Implement the simplest sound behavior, then rerun focused checks and related
-    existing suites. Refactor after green only when removing duplication or
-    clarifying structure helps, and rerun affected checks. A nearby test comment
-    may link the criterion and short scenario name.
+    Implement the simplest sound behavior, then rerun focused checks, the
+    skeleton check, and related existing suites. Refactor after green only when
+    removing duplication or clarifying structure helps, and rerun affected
+    checks. A nearby test comment may link the criterion and short scenario
+    name.
     If a failure reveals a new observable rule, update the criterion, scenarios,
     design, tasks, and tests before continuing. If automated red evidence is
     impractical, explain why and provide alternative evidence.

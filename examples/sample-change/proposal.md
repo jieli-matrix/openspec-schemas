@@ -2,17 +2,17 @@
 
 ## Why
 
-People need to export a cart in a portable format before checkout.
+People using a to-do list need the item count to reflect what they have added.
 
 ## What Changes
 
-- Add a cart CSV export that works for both populated and empty carts.
+- Increase the to-do item count when an item is added, while rejecting empty input.
 
 ## Capabilities
 
 ### New Capabilities
 
-- `cart-export`: Export cart contents as CSV.
+- `todo-items`: Add to-do items and keep the item count accurate.
 
 ### Modified Capabilities
 
@@ -20,4 +20,4 @@ None.
 
 ## Impact
 
-Adds a user-facing export action and its CSV response.
+Touches the user-facing add-item flow, item storage, and count display.

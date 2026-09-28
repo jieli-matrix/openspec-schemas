@@ -37,9 +37,14 @@ try {
     if (!instruction || instruction.artifactId !== artifact) {
       throw new Error(`Missing ${artifact} instructions`);
     }
+    if (artifact === 'tasks' && !instruction.instruction?.includes('working skeleton')) {
+      throw new Error('Missing walking-skeleton task guidance');
+    }
   }
   const apply = JSON.parse(run(['instructions', 'apply', '--change', 'sample-change', '--json']));
-  if (!apply.instruction?.includes('baseline')) throw new Error('Missing baseline apply guidance');
+  if (!apply.instruction?.includes('baseline') || !apply.instruction.includes('bones-out')) {
+    throw new Error('Missing baseline or bones-out apply guidance');
+  }
 
   run(['new', 'change', 'pilot-change', '--schema', 'lean-tdd']);
   const pilot = readFileSync(join(project, 'openspec', 'changes', 'pilot-change', '.openspec.yaml'), 'utf8');

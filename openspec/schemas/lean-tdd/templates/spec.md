@@ -8,12 +8,12 @@
 ### Requirement: AC-1 <!-- short acceptance criterion name -->
 <!-- State one normative, observable rule using SHALL or MUST. Keep cases below separate. -->
 
-#### Scenario: <!-- short descriptive case name -->
+#### Scenario: <!-- simplest happy path, named by its behavior -->
 - **GIVEN** <!-- relevant initial state -->
 - **WHEN** <!-- condition -->
 - **THEN** <!-- expected outcome -->
 
-#### Scenario: <!-- another distinct case for the same criterion -->
+#### Scenario: <!-- distinct boundary or error case for the same criterion -->
 - **GIVEN** <!-- different relevant initial state -->
 - **WHEN** <!-- action -->
 - **THEN** <!-- expected outcome -->

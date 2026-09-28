@@ -2,12 +2,12 @@
 
 ## Context
 
-The cart can already be read by the export action.
+The to-do list has a user-facing add-item flow and a displayed item count.
 
 ## Decisions
 
-Expose one export call that returns CSV content and a download filename. Review the call shape and errors through the acceptance tests before implementing serialization. Use the public export action as the main test boundary.
+Use the First item scenario as a walking skeleton: one user-level E2E check drives the add-item entry point through storage to the displayed count. Review the test-facing add-item call and empty-input behavior before implementation. Add integration checks for subsequent additions and input rejection where they give faster, distinct feedback.
 
 ## Risks / Trade-offs
 
-- CSV escaping errors could affect exported rows; add a focused check if the public tests leave this risk unclear.
+- A count could update without retaining the item; the skeleton check observes both the list and count.

@@ -24,6 +24,9 @@
 <!-- If tests reveal a missing observable rule or awkward call, revise the
      relevant requirement, scenarios, and this design before continuing. -->
 
+<!-- For a new flow, identify the simplest user-level happy path and the layers
+     the first full-path test must cross to drive a thin working skeleton. -->
+
 ## Risks / Trade-offs
 
 <!-- Known risks and trade-offs -->
