@@ -18,7 +18,7 @@ After trying a change, set `schema: lean-tdd` in your project's `openspec/config
 
 <img src="assets/lean-tdd-workflow.png" width="900" alt="Six-step Lean TDD loop: start from a user-facing criterion, draft a happy-path system public API test, build any supporting public API features it needs, run the focal test red, implement the happy path, and repeat.">
 
-For **AC-1: Adding an item increases the count**, start with `add_item()`:
+This to-do list example is adapted from [Brian Okken's *Lean TDD: TDD Without the Waste*](https://leantdd.com/). For **AC-1: Adding an item increases the count**, start with `add_item()`:
 
 ```text
 items = TodoList()
@@ -33,6 +33,8 @@ The `add_item()` test needs `count()` and `empty()` to observe its result. Give 
 
 The [testing trophy](https://kentcdodds.com/blog/the-testing-trophy-and-testing-classifications) helps choose test boundaries: the system public API often exercises interacting parts; broader end-to-end and focused unit checks add value when they cover a distinct risk. The schema does not require a UI harness or a test ratio.
 
-## Origin and license
+## Attribution and license
 
-Forked from OpenSpec's `spec-driven` schema at [`79b6aa9`](https://github.com/Fission-AI/OpenSpec/commit/79b6aa9c98f1e36795b2bc4ef2a8f770c6d3a777). The artifact graph and apply tracking are unchanged. MIT; see [LICENSE](LICENSE).
+The Lean TDD approach and original to-do list example come from [*Lean TDD: TDD Without the Waste*](https://leantdd.com/) by Brian Okken. The book and its original examples are © 2026 Brian Okken. This repository is an independent adaptation of those ideas for OpenSpec; its maintainer is not the book's author.
+
+The schema is forked from OpenSpec's `spec-driven` schema at [`79b6aa9`](https://github.com/Fission-AI/OpenSpec/commit/79b6aa9c98f1e36795b2bc4ef2a8f770c6d3a777). The artifact graph and apply tracking are unchanged. This repository is MIT licensed; see [LICENSE](LICENSE). That license does not license the book.
