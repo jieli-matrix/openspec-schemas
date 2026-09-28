@@ -20,18 +20,24 @@ After trying a change, set `schema: lean-tdd` in your project's `openspec/config
 
 <img src="assets/lean-tdd-workflow.png" width="900" alt="Six-step Lean TDD loop: start from a user-facing criterion, draft a happy-path system public API test, build any supporting public API features it needs, run the focal test red, implement the happy path, and repeat.">
 
-This to-do list example is adapted from [Brian Okken's *Lean TDD: TDD Without the Waste*](https://leantdd.com/). For **AC-1: Adding an item increases the count**, start with `add_item()`:
+This to-do list example is adapted from [Brian Okken's *Lean TDD: TDD Without the Waste*](https://leantdd.com/). For **AC-1: Adding an item increases the count**, draft the first `add_item()` test in pytest:
 
-```text
-items = TodoList()
-items.count()             -> 0
-items.empty()             -> true
-items.add_item("buy milk")
-items.count()             -> 1
-items.empty()             -> false
+```python
+from todo_list import TodoList
+
+
+def test_adding_an_item_increases_count():
+    items = TodoList()
+    assert items.count() == 0
+    assert items.empty()
+
+    items.add_item("buy milk")
+
+    assert items.count() == 1
+    assert not items.empty()
 ```
 
-The `add_item()` test needs `count()` and `empty()` to observe its result. Give each query an observable requirement marked `**Supports:** AC-1`, test and implement those features inside the AC-1 task group, then return to `add_item()`. See the [spec](examples/sample-change/specs/todo-items/spec.md), [design](examples/sample-change/design.md), and [tasks](examples/sample-change/tasks.md) for the complete example.
+Writing the `add_item()` test reveals that it needs two other public methods: `count()` to observe the number of items and `empty()` to observe whether the list has any. Specify each as a feature marked `**Supports:** AC-1`, test and implement their new-list behavior, then return to the focal test and make `add_item()` pass. See the [spec](examples/sample-change/specs/todo-items/spec.md), [design](examples/sample-change/design.md), and [tasks](examples/sample-change/tasks.md) for the complete example.
 
 The [testing trophy](https://kentcdodds.com/blog/the-testing-trophy-and-testing-classifications) helps choose test boundaries: the system public API often exercises interacting parts; broader end-to-end and focused unit checks add value when they cover a distinct risk. The schema does not require a UI harness or a test ratio.
 
