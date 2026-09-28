@@ -1,6 +1,6 @@
-name: spec-driven
+name: lean-tdd
 version: 1
-description: Default OpenSpec workflow - proposal → specs → design → tasks
+description: Lean TDD workflow - acceptance criteria, existing-suite baseline, and focused red/green checks
 artifacts:
   - id: proposal
     generates: proposal.md
@@ -89,9 +89,10 @@ artifacts:
       - **RENAMED Requirements**: Name changes only - use FROM:/TO: format
 
       Format requirements:
-      - Each requirement: `### Requirement: <name>` followed by description
-      - Use SHALL/MUST for normative requirements (avoid should/may)
-      - Each scenario: `#### Scenario: <name>` with WHEN/THEN format
+      - Treat each acceptance criterion as one `### Requirement: <short name>` block. An optional stable ID such as AC-1 can precede the name.
+      - State the normative rule separately from its cases, using SHALL/MUST (avoid should/may).
+      - Group distinct cases under that criterion as `#### Scenario: <short descriptive name>` blocks. Prefer GIVEN/WHEN/THEN; use WHEN/THEN when setup adds no information. File order supplies sequence; scenario numbers are unnecessary.
+      - Each scenario should describe observable behavior that could become a focused automated check. Avoid repeating private implementation paths.
       - **CRITICAL**: Scenarios MUST use exactly 4 hashtags (`####`). Using 3 hashtags or bullets will fail silently.
       - Every requirement MUST have at least one scenario.
 
@@ -145,6 +146,7 @@ artifacts:
       ```
 
       Specs should be testable - each scenario is a potential test case.
+      A nearby test comment may link a criterion ID and scenario name; do not maintain a test-function registry in the spec.
     requires:
       - proposal
 
@@ -169,6 +171,13 @@ artifacts:
       - **Migration Plan**: Steps to deploy, rollback strategy (if applicable)
       - **Open Questions**: Unknowns that can safely be answered later without
         changing the specs, the approach, or the task breakdown. Omit if none.
+
+      If the change introduces a public call, optionally sketch its inputs,
+      outputs, error behavior, and types. Review the call shape and names through
+      proposed tests and available lint or static type checks. Explain the useful
+      test boundary when it needs a design decision. Omit the API sketch for
+      changes with no relevant public call. If tests expose a missing observable
+      rule or awkward API, revise specs and design before proceeding.
 
       Open questions are for genuinely deferrable unknowns, not decisions you
       skipped. If a question would change the specs, the chosen approach, or
@@ -201,6 +210,25 @@ artifacts:
       unfinished. A line with no checkbox is not tracked at all.
 
       Guidelines:
+      - The first tracked task MUST inspect project files, CI, and nearby tests
+        to discover test tooling; run existing suites related to the criteria;
+        record commands, results, and preexisting failures before new tests or
+        implementation. Keep those suites as regression checks throughout.
+      - Organize subsequent work one acceptance criterion at a time, grouping its
+        named scenarios. Identify the highest useful public boundary for behavior
+        tests, the focused check, available lint/type checks, and related existing
+        suites to rerun. Add a few UI checks for UI behavior; add focused unit
+        checks only when they give distinct feedback on complex logic. Do not
+        prescribe a runner or a test-level ratio.
+      - Include test-call API review, a meaningful red run and chat report of its
+        command and concise failure, the simplest sound implementation, focused
+        and related-suite green runs, and an optional useful refactor after green.
+        If a new automated check is impractical, state why and give alternative
+        evidence. Include final relevant-suite commands and results in the last
+        criterion task or a broader integration task.
+      - When a failure reveals a new observable rule, update criteria, scenarios,
+        design, and tasks before continuing. Nearby test comments linking a
+        criterion and scenario are optional.
       - Group related tasks under ## numbered headings
       - Each task MUST be a checkbox: `- [ ] X.Y Task description`
       - Tasks should be small enough to complete in one session
@@ -243,5 +271,23 @@ apply:
   requires: [tasks]
   tracks: tasks.md
   instruction: |
-    Read context files, work through pending tasks, mark complete as you go.
-    Pause if you hit blockers or need clarification.
+    Read context files. Complete the existing-suite baseline task first: discover
+    project test commands from files, CI, and nearby tests; run related suites;
+    record commands, results, and preexisting failures. Retain them for regression.
+    Work one acceptance criterion and its grouped scenarios at a time. Write
+    behavior-focused checks at the highest useful public API or service boundary.
+    For UI behavior, use a few UI checks; add focused unit checks for complex
+    logic only when they give distinct feedback. Do not impose a fixed test ratio.
+    Sketch only the public API needed by the checks. Review test calls, names,
+    types, and error behavior with available lint and static type checks.
+    Run a focused check that fails for missing behavior; report the command and
+    concise meaningful failure summary in chat. Keep detailed logs only if useful.
+    Implement the simplest sound behavior, then rerun focused checks and related
+    existing suites. Refactor after green only when removing duplication or
+    clarifying structure helps, and rerun affected checks. A nearby test comment
+    may link the criterion and short scenario name.
+    If a failure reveals a new observable rule, update the criterion, scenarios,
+    design, tasks, and tests before continuing. If automated red evidence is
+    impractical, explain why and provide alternative evidence.
+    Run the final relevant suites, report commands and results, and only then
+    mark tracked tasks complete. Pause if a blocker needs clarification.
