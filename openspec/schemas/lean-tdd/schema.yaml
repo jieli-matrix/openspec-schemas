@@ -1,6 +1,11 @@
+# Forked from OpenSpec's spec-driven schema at 79b6aa9.
+# OpenSpec contract: artifact IDs, paths, dependencies, delta syntax, and task tracking.
+# Lean TDD additions: acceptance criteria in specs, API choices in design,
+# and the test-first development loop in tasks and apply.
+# The proposal template is unchanged from spec-driven.
 name: lean-tdd
 version: 1
-description: Lean TDD workflow from acceptance criteria through public API tests
+description: OpenSpec spec-driven artifacts with a Lean TDD development cycle
 artifacts:
   - id: proposal
     generates: proposal.md
@@ -88,12 +93,20 @@ artifacts:
       - **REMOVED Requirements**: Deprecated features - MUST include **Reason** and **Migration**
       - **RENAMED Requirements**: Name changes only - use FROM:/TO: format
 
-      Format requirements:
-      - Each user-facing acceptance criterion: `### Requirement: AC-1 <name>`, then a separate SHALL/MUST rule.
-      - Group short-named `#### Scenario:` cases beneath it. Put a simple happy path first; prefer GIVEN/WHEN/THEN, or WHEN/THEN when setup adds nothing.
-      - Give each new supporting public API feature its own requirement and scenario. After its SHALL/MUST rule, write `**Supports:** AC-1 <name>`; do not number it as a peer criterion. Avoid private test helpers.
+      OpenSpec delta-spec format:
+      - Each requirement: `### Requirement: <name>` followed by description
+      - Use SHALL/MUST for normative requirements (avoid should/may)
+      - Each scenario: `#### Scenario: <name>` with WHEN/THEN format
       - **CRITICAL**: Scenarios MUST use exactly 4 hashtags (`####`). Using 3 hashtags or bullets will fail silently.
       - Every requirement MUST have at least one scenario.
+
+      Lean TDD acceptance criteria:
+      - Name user-facing criteria `AC-1 <name>` in Requirement headings. Group
+        short-named cases under each; put a simple happy path first. Use
+        GIVEN/WHEN/THEN when setup matters.
+      - Give each new supporting public API feature its own requirement and
+        scenario. After its SHALL/MUST rule, write `**Supports:** AC-1 <name>`;
+        do not number it as a peer criterion. Avoid private test helpers.
 
       New capabilities only: the delta spec's first section is `## Purpose` -
       one or two sentences (50+ characters, or `openspec validate --strict`
@@ -184,11 +197,16 @@ artifacts:
       - **Open Questions**: Unknowns that can safely be answered later without
         changing the specs, the approach, or the task breakdown. Omit if none.
 
+      Lean TDD design choices:
       When relevant, sketch the focal public call and the query or setup calls
       its test needs. Review names, inputs, outputs, errors, and types through
       the test and available static checks. Link new supporting public API features
       to its criterion in specs and tasks. Revise specs and design if tests
       expose a gap; omit the API sketch when no public call is involved.
+
+      If test boundaries shape the approach, explain why the focal public API
+      check gives useful confidence and identify risks it cannot cover.
+      Leave concrete check selection to tasks.
 
       Open questions are for genuinely deferrable unknowns, not decisions you
       skipped. If a question would change the specs, the chosen approach, or
@@ -214,13 +232,14 @@ artifacts:
       would change what gets built, resolve them with the user first - do not
       bake an unstated assumption into the task list.
 
+      OpenSpec checkbox tracking:
       **IMPORTANT: Follow the template below exactly.** The apply phase parses
       checkbox format to track progress. A box holding only `x` counts as done,
       upper or lower case and with any spacing, so `- [ x]` is done too. Every
       other marker, including `- [~]`, `- [-]` and an empty `- []`, reads as
       unfinished. A line with no checkbox is not tracked at all.
 
-      Guidelines:
+      Lean TDD development cycle:
       - First, discover and run related existing suites. Record commands,
         results, and preexisting failures; keep those suites for regression.
       - For each user-facing criterion, draft a happy-path test at the system
@@ -230,11 +249,15 @@ artifacts:
       - Plan a meaningful red run and chat summary, the simplest sound
         implementation, focused and related-suite green runs, and useful
         refactoring only after green. Include final suite commands and results.
-      - Use the testing trophy as a guide: public API/integration checks for
-        interactions, broader E2E and focused unit checks where distinct risks
-        warrant them, and available static checks. No fixed runner or ratio.
+      - Use Kent C. Dodds's testing trophy
+        (https://kentcdodds.com/blog/the-testing-trophy-and-testing-classifications)
+        as a guide: public API/integration checks for interactions, broader E2E
+        and focused unit checks where distinct risks warrant them, and available
+        static checks. No fixed runner or ratio.
       - Update specs, design, and tasks for a newly discovered observable rule.
         If automation is impractical, explain why and give alternative evidence.
+
+      Task format and scope:
       - Group related tasks under ## numbered headings
       - Each task MUST be a checkbox: `- [ ] X.Y Task description`
       - Tasks should be small enough to complete in one session
@@ -276,6 +299,10 @@ apply:
   requires: [tasks]
   tracks: tasks.md
   instruction: |
+    Read context files, work through pending tasks, mark complete as you go.
+    Pause if you hit blockers or need clarification.
+
+    Lean TDD development cycle:
     Run and record the related existing-suite baseline before new behavior.
     For each user-facing criterion, draft a happy-path test at the system public
     API. If it needs new public query or setup API features, add linked supporting

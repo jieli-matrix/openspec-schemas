@@ -1,5 +1,7 @@
 # Spec Delta
 
+<!-- OpenSpec delta format is retained; Lean TDD adds AC labels and supporting features. -->
+
 ## Purpose
 <!-- New capabilities only: one or two sentences (50+ characters) on what this capability is for. Delete this section for an existing capability. -->
 
@@ -18,9 +20,10 @@
 - **WHEN** <!-- action -->
 - **THEN** <!-- expected outcome -->
 
-<!-- If a test at the system public API needs a new public query or setup call,
+<!-- Lean TDD: If a test at the system public API needs a new public query or setup call,
      specify that supporting public API feature in its own Requirement block.
      Put **Supports:** AC-1 <criterion name> after its SHALL/MUST sentence instead of
      assigning the supporting feature a peer AC number.
      Do not specify private test helpers. Use WHEN/THEN alone when setup adds
-     nothing. Preserve full blocks under ## MODIFIED Requirements. -->
+     nothing. -->
+<!-- OpenSpec: Preserve full blocks under ## MODIFIED Requirements. -->

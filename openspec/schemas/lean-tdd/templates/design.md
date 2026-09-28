@@ -16,7 +16,7 @@
 
 <!-- Key design decisions with rationale and alternatives considered -->
 
-<!-- When relevant, sketch the focal system public API call and the queries
+<!-- Lean TDD: When relevant, sketch the focal system public API call and the queries
      needed to test it. Link new supporting public API features to its criterion.
      Review call shape with tests and available static checks; revise specs and
      design if tests reveal a gap. Omit this sketch when no public call applies. -->
