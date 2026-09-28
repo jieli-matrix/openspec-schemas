@@ -46,3 +46,5 @@ The [testing trophy](https://kentcdodds.com/blog/the-testing-trophy-and-testing-
 The Lean TDD approach and original to-do list example come from [*Lean TDD: TDD Without the Waste*](https://leantdd.com/) by Brian Okken. The book and its original examples are © 2026 Brian Okken. This repository is an independent adaptation of those ideas for OpenSpec; its maintainer is not the book's author.
 
 The schema is forked from OpenSpec's `spec-driven` schema at [`79b6aa9`](https://github.com/Fission-AI/OpenSpec/commit/79b6aa9c98f1e36795b2bc4ef2a8f770c6d3a777). The artifact graph and apply tracking are unchanged. This repository is MIT licensed; see [LICENSE](LICENSE). That license does not license the book.
+
+For the adaptation's background, see the [Lean TDD working model](docs/explorations/lean-tdd-insights.md), [schema options](docs/explorations/lean-tdd-schema-options.md), and [implementation change](docs/changes/create-lean-tdd-community-schema/design.md).
