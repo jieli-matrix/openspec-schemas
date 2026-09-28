@@ -1,0 +1,21 @@
+{
+  "name": "openspec-lean-tdd-schema",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "bin": {
+    "openspec-lean-tdd": "./scripts/start.mjs"
+  },
+  "files": [
+    "assets",
+    "openspec/schemas/lean-tdd",
+    "scripts/start.mjs"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jieli-matrix/openspec-schemas.git"
+  },
+  "engines": {
+    "node": ">=20.19.0"
+  }
+}

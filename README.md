@@ -4,29 +4,19 @@ Turn one user-facing acceptance criterion into a test at the system public API. 
 
 ## Start a change
 
-With the [OpenSpec CLI](https://github.com/Fission-AI/OpenSpec) installed and this repository checked out, run one command from your OpenSpec project:
+With the [OpenSpec CLI](https://github.com/Fission-AI/OpenSpec) and Node.js installed, run one command from your OpenSpec project. npm fetches this repository from its [Git remote](https://github.com/jieli-matrix/openspec-schemas.git):
 
 ```sh
-node /path/to/openspec-lean-tdd-schema/scripts/start.mjs add-item-count
+npm exec --yes --package=git+https://github.com/jieli-matrix/openspec-schemas.git -- openspec-lean-tdd your-openspec-change
 ```
 
-The command copies `openspec/schemas/lean-tdd/` into your project if needed and creates `add-item-count` with `--schema lean-tdd`. It leaves your project's default schema alone. You can pass the project directory as a second argument instead of running from it.
+Replace `your-openspec-change` with the name of the change you want to create. The command copies `openspec/schemas/lean-tdd/` into your project if needed and runs `openspec new change <name> --schema lean-tdd`. It leaves your project's default schema alone. You can pass a project directory after the change name instead of running from it.
 
 After trying a change, set `schema: lean-tdd` in your project's `openspec/config.yaml` if you want it as the default. [`examples/config.yaml`](examples/config.yaml) shows the minimal setting.
 
 ## How the loop works
 
-```mermaid
-flowchart TD
-    A[User-facing acceptance criterion] --> B[Draft a happy-path test at the system public API]
-    B --> C{Need a new public query or setup call?}
-    C -- Yes --> D[Specify and test it as a feature supporting this criterion]
-    D --> C
-    C -- No --> E[Run the focal test red]
-    E --> F[Implement the simplest behavior and rerun related suites]
-    F --> G[Next criterion or distinct case]
-    G --> A
-```
+<img src="assets/lean-tdd-workflow.png" width="900" alt="Six-step Lean TDD loop: start from a user-facing criterion, draft a happy-path system public API test, build any supporting public API features it needs, run the focal test red, implement the happy path, and repeat.">
 
 For **AC-1: Adding an item increases the count**, start with `add_item()`:
 
