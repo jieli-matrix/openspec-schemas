@@ -1,41 +1,48 @@
-# Lean TDD schema for OpenSpec
+# Lean TDD for OpenSpec
 
-A copyable OpenSpec community schema that turns a user-facing acceptance criterion into a test at the system public API, grows the public behavior needed to run it, and repeats for the next criterion.
+Turn one user-facing acceptance criterion into a test at the system public API. Grow any public behavior that test needs, make the happy path pass, then repeat for the next criterion.
 
-The bundle is forked from OpenSpec's `spec-driven` schema at [`79b6aa9c98f1e36795b2bc4ef2a8f770c6d3a777`](https://github.com/Fission-AI/OpenSpec/commit/79b6aa9c98f1e36795b2bc4ef2a8f770c6d3a777). Its four artifacts and apply tracking are unchanged. The schema is guidance for an agent; OpenSpec does not enforce test order or inspect test results.
+## Start a change
 
-## Install in a project
-
-Install the [OpenSpec CLI](https://github.com/Fission-AI/OpenSpec) and initialize the consuming project with `openspec init` if needed. From a checkout of this repository, copy the complete bundle into that project's `openspec/schemas/` directory:
+With the [OpenSpec CLI](https://github.com/Fission-AI/OpenSpec) installed and this repository checked out, run one command from your OpenSpec project:
 
 ```sh
-mkdir -p /path/to/project/openspec/schemas
-cp -R openspec/schemas/lean-tdd /path/to/project/openspec/schemas/
-cd /path/to/project
-openspec schema validate lean-tdd
+node /path/to/openspec-lean-tdd-schema/scripts/start.mjs add-item-count
 ```
 
-On Windows PowerShell, use `Copy-Item -Recurse openspec/schemas/lean-tdd <project>/openspec/schemas/` from the checkout. Copy the directory itself, including `schema.yaml` and `templates/`.
+The command copies `openspec/schemas/lean-tdd/` into your project if needed and creates `add-item-count` with `--schema lean-tdd`. It leaves your project's default schema alone. You can pass the project directory as a second argument instead of running from it.
 
-Try it for one change while keeping your project's default:
+After trying a change, set `schema: lean-tdd` in your project's `openspec/config.yaml` if you want it as the default. [`examples/config.yaml`](examples/config.yaml) shows the minimal setting.
 
-```sh
-openspec new change my-feature --schema lean-tdd
-openspec status --change my-feature
+## How the loop works
+
+```mermaid
+flowchart TD
+    A[User-facing acceptance criterion] --> B[Draft a happy-path test at the system public API]
+    B --> C{Need a new public query or setup call?}
+    C -- Yes --> D[Specify and test it as a feature supporting this criterion]
+    D --> C
+    C -- No --> E[Run the focal test red]
+    E --> F[Implement the simplest behavior and rerun related suites]
+    F --> G[Next criterion or distinct case]
+    G --> A
 ```
 
-After a pilot, optionally set the project default by putting the contents of [`examples/config.yaml`](examples/config.yaml) in the project's `openspec/config.yaml`. New changes then use `lean-tdd` without `--schema`; existing changes retain their recorded schema. Add project-specific context or rules only when useful. The reusable schema does not prescribe a language or test runner.
+For **AC-1: Adding an item increases the count**, start with `add_item()`:
 
-## Workflow
+```text
+items = TodoList()
+items.count()             -> 0
+items.empty()             -> true
+items.add_item("buy milk")
+items.count()             -> 1
+items.empty()             -> false
+```
 
-Write each user-facing acceptance criterion, often first expressed through the UI, as one normative `### Requirement:` block with short-named `#### Scenario:` cases. The first tracked task runs related existing suites and records preexisting failures. For bones-out development, take a simple happy path and draft a test through the system public API. If that test needs new public queries or setup calls, specify them as separate public feature requirements marked `**Supports:** <criterion>` and implement them within that criterion's task group. Then make the focal test pass, rerun related suites, and take the next criterion or distinct case through the same loop. A public API test can cover all relevant implementation layers without a UI or E2E harness.
+The `add_item()` test needs `count()` and `empty()` to observe its result. Give each query an observable requirement marked `**Supports:** AC-1`, test and implement those features inside the AC-1 task group, then return to `add_item()`. See the [spec](examples/sample-change/specs/todo-items/spec.md), [design](examples/sample-change/design.md), and [tasks](examples/sample-change/tasks.md) for the complete example.
 
-Use the [testing trophy](https://kentcdodds.com/blog/the-testing-trophy-and-testing-classifications) as a guide: static checks support the work, public API or integration tests check interacting parts, broader E2E tests cover representative flows when useful, and focused unit tests help with complex logic. Choose each test for the confidence and feedback it adds; there is no required test ratio.
+The [testing trophy](https://kentcdodds.com/blog/the-testing-trophy-and-testing-classifications) helps choose test boundaries: the system public API often exercises interacting parts; broader end-to-end and focused unit checks add value when they cover a distinct risk. The schema does not require a UI harness or a test ratio.
 
-## Validate this repository
+## Origin and license
 
-The to-do list change in [`examples/sample-change`](examples/sample-change) starts with AC-1 and `add_item()`. Its `count()` and `empty()` requirements both point back to AC-1, and their tasks stay inside the AC-1 group. Run `node scripts/smoke.mjs` from this repository. It creates a disposable consuming project, installs the bundle, validates it and the sample change, resolves instructions for all artifacts, and checks both per-change and project-default selection. The script uses portable Node paths and temporary directories so it can run on Unix or Windows.
-
-## License
-
-MIT. The fork retains the OpenSpec Contributors attribution in [`LICENSE`](LICENSE).
+Forked from OpenSpec's `spec-driven` schema at [`79b6aa9`](https://github.com/Fission-AI/OpenSpec/commit/79b6aa9c98f1e36795b2bc4ef2a8f770c6d3a777). The artifact graph and apply tracking are unchanged. MIT; see [LICENSE](LICENSE).

@@ -9,15 +9,8 @@
 - [ ] 2.1 Draft the simple happy-path test through <!-- focal public operation -->; identify the public query or setup calls needed to assert AC-1, review their contracts, and link any new supporting requirements to AC-1.
 - [ ] 2.2 Under AC-1, test and implement each supporting public feature until the focal test can run; report meaningful red failures and rerun focused and related baseline suites.
 - [ ] 2.3 Run the focal test red for the missing behavior, implement the simplest sound happy path, and rerun focal, supporting-feature, and related baseline checks.
+- [ ] 2.4 Add any distinct cases at useful test boundaries, then report final relevant-suite commands and results; refactor after green only if useful.
 
-## 3. Next user-facing criterion or distinct AC-1 case: <!-- ID and name -->
-
-- [ ] 3.1 Write its next behavior test at the system public API or another useful boundary, show meaningful red evidence, and implement the simplest sound behavior.
-- [ ] 3.2 Rerun focused and related suites, refactor after green only when useful, then report final relevant-suite commands and results.
-
-<!-- Repeat criterion groups as needed. Follow the testing trophy as a guide:
-     public API/integration checks for interactions, broader E2E checks when
-     useful, focused unit checks for complex logic, and static checks. No fixed
-     ratios and no requirement for a UI or E2E harness.
-     If no new automated check is practical, state why and record alternative
-     evidence. Update specs/design/tasks for a newly discovered observable rule. -->
+<!-- Repeat group 2 for the next acceptance criterion. Add broader E2E or
+     focused unit checks only when they give distinct feedback. Update specs,
+     design, and tasks for a new observable rule. -->

@@ -16,19 +16,10 @@
 
 <!-- Key design decisions with rationale and alternatives considered -->
 
-<!-- If this change introduces public calls, optionally sketch the test-facing
-     call shape: inputs, outputs, error behavior, and types. Review names and
-     calls through proposed tests and available lint/type checks. Explain the
-     useful test boundary when needed. Omit this for unrelated changes. -->
-
-<!-- If tests reveal a missing observable rule or awkward call, revise the
-     relevant requirement, scenarios, and this design before continuing. -->
-
-<!-- Choose a user-facing acceptance criterion and sketch its test through the
-     system public API. Identify the public queries or setup calls needed to
-     observe the result; treat new observable behavior as a feature in specs
-     and tasks, explicitly linked to the focal criterion. Let these tests
-     drive the lower-level design. -->
+<!-- When relevant, sketch the focal system public API call and the queries
+     needed to test it. Link new supporting public API features to its criterion.
+     Review call shape with tests and available static checks; revise specs and
+     design if tests reveal a gap. Omit this sketch when no public call applies. -->
 
 ## Risks / Trade-offs
 

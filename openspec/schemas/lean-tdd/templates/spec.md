@@ -19,7 +19,7 @@
 - **THEN** <!-- expected outcome -->
 
 <!-- If a test at the system public API needs a new public query or setup call,
-     specify that supporting observable behavior in its own Requirement block.
+     specify that supporting public API feature in its own Requirement block.
      Put **Supports:** AC-1 <criterion name> after its SHALL/MUST sentence instead of
      assigning the supporting feature a peer AC number.
      Do not specify private test helpers. Use WHEN/THEN alone when setup adds
