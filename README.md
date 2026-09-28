@@ -1,6 +1,8 @@
 # Lean TDD for OpenSpec
 
-Turn one user-facing acceptance criterion into a test at the system public API. Grow any public behavior that test needs, make the happy path pass, then repeat for the next criterion.
+[Brian Okken's Lean TDD](https://leantdd.com/) applies Lean principles to test-driven development: focus on valuable behavior and useful feedback while removing duplicated tests and other wasted effort.
+
+This OpenSpec schema turns that approach into a workflow: turn one user-facing acceptance criterion into a test at the system public API. Grow any public behavior that test needs, make the happy path pass, then repeat for the next criterion.
 
 ## Start a change
 
