@@ -4,7 +4,7 @@
 
 **Recommendation:** pilot a project committed `lean-tdd` schema forked from `spec-driven`. Keep `proposal → specs/design → tasks → apply`, the existing delta spec format, and checkbox task tracking. Write each acceptance criterion as a requirement with several grouped scenarios. Prefer Given/When/Then steps, while allowing When/Then when setup adds nothing. Make a related-suite baseline the first tracked task, before the first new test or implementation. Put test-tool discovery in the schema guidance; use `openspec/config.yaml` to select the schema and add only project facts the agent cannot readily discover. Run a change with `--schema lean-tdd` before choosing it as the project default.
 
-This design note preceded the schema implementation. The [research note](lean-tdd-insights.md) distinguishes Brian Okken's public Lean TDD material from this OpenSpec adaptation.
+This design note preceded the schema implementation. Its schema excerpts describe the first version. The [acceptance-test focus change](../changes/focus-lean-tdd-on-acceptance-tests/design.md) later rewrote the instructions: specs hold only acceptance criteria with plain names, AC numbers appear only in tasks, tasks follow spec order, and the APIs an acceptance test calls get no tests of their own. The [research note](lean-tdd-insights.md) distinguishes Brian Okken's public Lean TDD material from this OpenSpec adaptation.
 
 ## Current OpenSpec behavior
 

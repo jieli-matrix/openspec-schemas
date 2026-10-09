@@ -1,29 +1,24 @@
 # Spec Delta
 
-<!-- OpenSpec delta format is retained; Lean TDD adds AC labels and supporting features. -->
+<!-- Each requirement is one acceptance criterion; each scenario is one acceptance test.
+     Order requirements in the order they will be built. -->
 
 ## Purpose
 <!-- New capabilities only: one or two sentences (50+ characters) on what this capability is for. Delete this section for an existing capability. -->
 
 ## ADDED Requirements
 
-### Requirement: AC-1 <!-- short acceptance criterion name -->
-<!-- State one normative, observable rule using SHALL or MUST. Keep cases below separate. -->
+### Requirement: <!-- outcome name, no AC number -->
+<!-- One SHALL/MUST sentence stating the observable rule. -->
 
 #### Scenario: <!-- simple happy path, named by its behavior -->
-- **GIVEN** <!-- relevant initial state -->
-- **WHEN** <!-- condition -->
+- **GIVEN** <!-- initial state, observed through public calls -->
+- **WHEN** <!-- the focal call -->
+- **THEN** <!-- expected outcome, observed through public calls -->
+
+#### Scenario: <!-- distinct boundary or error case -->
+- **GIVEN** <!-- different initial state -->
+- **WHEN** <!-- the focal call -->
 - **THEN** <!-- expected outcome -->
 
-#### Scenario: <!-- distinct boundary or error case for the same criterion -->
-- **GIVEN** <!-- different relevant initial state -->
-- **WHEN** <!-- action -->
-- **THEN** <!-- expected outcome -->
-
-<!-- Lean TDD: If a test at the system public API needs a new public query or setup call,
-     specify that supporting public API feature in its own Requirement block.
-     Put **Supports:** AC-1 <criterion name> after its SHALL/MUST sentence instead of
-     assigning the supporting feature a peer AC number.
-     Do not specify private test helpers. Use WHEN/THEN alone when setup adds
-     nothing. -->
-<!-- OpenSpec: Preserve full blocks under ## MODIFIED Requirements. -->
+<!-- Together, the scenarios must show every API they call changing state, so a stub cannot pass. -->

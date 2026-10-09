@@ -21,7 +21,7 @@ Acceptance criterion / requirement (the outcome)
              └─ API and design decisions exposed by the tests
 ```
 
-Start with a **list of acceptance criteria**. Give each criterion a stable identifier so its cases, automated tests, and later review evidence can refer to it. One criterion can expand into several cases: a normal path, an error, a boundary, or another materially different behavior. Keep those cases together under their criterion so a reader can see why each test exists. Give each case a short, descriptive name; its place in the spec can show the reading order without an opaque case ID.
+Start with an **ordered list of acceptance criteria**. Give each criterion a plain outcome name; together with a scenario name, it is how cases, automated tests, and later review evidence refer to it. Within one change, criteria are also numbered AC-1..AC-N by their position, for use in tasks. One criterion can expand into several cases: a normal path, an error, a boundary, or another materially different behavior. Keep those cases together under their criterion so a reader can see why each test exists. Give each case a short, descriptive name; its place in the spec can show the reading order without an opaque case ID.
 
 For the first version, use OpenSpec's existing delta format. Each acceptance criterion becomes a `### Requirement:` block with a normative requirement sentence. Each case becomes a `#### Scenario:` under that requirement. This keeps the **requirement statement** separate from its **test examples** while grouping all cases for one criterion. It also means the spec can pass today's validation and archive path without adding a second test document.
 
@@ -30,11 +30,13 @@ For the first version, use OpenSpec's existing delta format. Each acceptance cri
 | Criterion / requirement statement | What outcome and cross-case rule must hold for a user or caller? | Implementation steps or test framework syntax. |
 | Scenario / test case | Which concrete example will prove or challenge that criterion? Prefer **Given / When / Then** steps. | Cases scattered under unrelated requirements or coupled to private implementation details. |
 
-Put the criterion ID in the requirement heading and a short behavior name in each scenario heading. Design decisions and tasks can refer to the criterion and scenario name without repeating the same rule in several documents. The scenarios' order in the file usually provides enough sequence; numbering is optional, and the descriptive name should still carry the meaning.
+Put the plain outcome name in the requirement heading and a short behavior name in each scenario heading. Keep AC numbers out of headings: archive merges requirements into the capability's main spec by heading, so numbers from separate changes would pile up there and collide. Design decisions and tasks can refer to the criterion and scenario name without repeating the same rule in several documents. The order of criteria in the spec is the order they are built, and tasks follow it exactly. See the [acceptance-test focus change](../changes/focus-lean-tdd-on-acceptance-tests/design.md).
 
 Keep a short **API sketch** in design when a new public call is involved: name, inputs, outputs, errors, and relevant types. It may evolve as the tests are written. The spec gives the criterion and grouped cases; design explains the API choices; the test code supplies the executable cases. A case can have a stable ID even while its test location is still unknown.
 
-Once a case becomes an automated test, a short comment near the test function can name its criterion and scenario, such as `AC-1 / Unknown name`. Test names can stay natural for the framework; the spec does not need a maintained list of function names.
+**Only acceptance tests are planned.** APIs a test calls for setup or observation are named in its scenario steps and sketched in design. They are covered through the acceptance test, not by tests of their own, so the scenarios must be chosen so that a stub of those APIs cannot pass.
+
+Once a case becomes an automated test, a short comment near the test function can name its criterion and scenario, such as `Unknown schema names give callers usable choices / Unknown name`. Test names can stay natural for the framework; the spec does not need a maintained list of function names.
 
 ### Example that fits the current delta format
 
@@ -48,7 +50,7 @@ Lets callers recover from an unknown schema selection by showing valid choices.
 
 ## ADDED Requirements
 
-### Requirement: AC-1 Unknown schema names give callers usable choices
+### Requirement: Unknown schema names give callers usable choices
 The system SHALL identify an unknown schema name and report the schemas
 the caller can select.
 

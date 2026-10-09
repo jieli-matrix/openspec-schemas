@@ -1,26 +1,20 @@
 # Design
 
-## Context
+## API by criterion
 
-<!-- Current state and constraints that shape the approach. See proposal.md for motivation - don't restate it -->
+### <!-- requirement name, in spec order -->
 
-## Goals / Non-Goals
+<!-- The focal call, plus the setup and observation calls its scenarios use:
+     names, inputs, outputs, errors, and types. Mark calls that already exist. -->
 
-**Goals:**
-<!-- What this design aims to achieve -->
+## Test boundaries
 
-**Non-Goals:**
-<!-- What is explicitly out of scope -->
+<!-- The test level for each criterion (public function, CLI, HTTP, UI) and why. -->
 
 ## Decisions
 
-<!-- Key design decisions with rationale and alternatives considered -->
-
-<!-- Lean TDD: When relevant, sketch the focal system public API call and the queries
-     needed to test it. Link new supporting public API features to its criterion.
-     Review call shape with tests and available static checks; revise specs and
-     design if tests reveal a gap. Omit this sketch when no public call applies. -->
+<!-- Non-obvious choices with the alternatives considered; include migration if relevant. Omit if none. -->
 
 ## Risks / Trade-offs
 
-<!-- Known risks and trade-offs -->
+<!-- [Risk] → Mitigation, including what the acceptance tests cannot catch. -->

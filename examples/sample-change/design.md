@@ -1,14 +1,10 @@
 # Design
 
-## Context
+## API by criterion
 
-The to-do list needs a small public API for adding items and observing state.
+### Adding an item increases the count
 
-## Decisions
-
-Start with AC-1 and `add_item()` as its focal public method. A test of its first successful call needs `count()` and `empty()` to observe the result. Give those queries public feature requirements explicitly linked to AC-1, and get their new-list behavior working first. Then run the `add_item()` test red for missing add behavior and implement it through the needed layers. Test another addition before closing AC-1; only then move to the next user-facing criterion.
-
-The intended call shape is:
+The focal call is `add_item()`. The scenarios observe its effect through `count()` and `empty()`. All three are new.
 
 ```text
 items = TodoList()
@@ -19,6 +15,17 @@ items.count()             -> 1
 items.empty()             -> false
 ```
 
+| Call | Inputs | Output | Errors |
+| --- | --- | --- | --- |
+| `TodoList()` | none | empty list | none |
+| `add_item(text)` | item text | none | none in this change |
+| `count()` | none | number of items | none |
+| `empty()` | none | true exactly when `count()` is zero | none |
+
+## Test boundaries
+
+The `TodoList` methods are the public API, so each scenario is one test against them. `count()` and `empty()` get no tests of their own. The two scenarios cover them: First item moves `empty()` from true to false, and Another item shows that `count()` counts past one.
+
 ## Risks / Trade-offs
 
-- `count()` and `empty()` could be hardcoded for a new list; the `add_item()` test checks that both change with the list state.
+- The acceptance tests do not check item contents or order. A later criterion that lists items would cover them.
