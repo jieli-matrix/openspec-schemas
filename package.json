@@ -1,16 +1,18 @@
 {
-  "name": "openspec-lean-tdd-schema",
+  "name": "openspec-schemas",
   "version": "0.1.0",
   "private": true,
   "type": "module",
   "bin": {
-    "openspec-lean-tdd": "./scripts/start.mjs"
+    "openspec-schemas": "./bin/openspec-schemas.mjs"
   },
   "files": [
-    "assets",
-    "openspec/schemas/lean-tdd",
-    "scripts/start.mjs"
+    "bin",
+    "openspec/schemas"
   ],
+  "scripts": {
+    "test": "node --test"
+  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/jieli-matrix/openspec-schemas.git"
