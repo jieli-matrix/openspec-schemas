@@ -45,5 +45,5 @@
 ## 8. End-to-end check from the Git remote
 
 - [x] 8.1 Locally, check that `npx --package=. openspec-schemas list` and `npm exec --package=file:$PWD -- openspec-schemas list` run from a scratch directory
-- [ ] 8.2 After pushing, in a scratch OpenSpec project, run each README command via `npx github:jieli-matrix/openspec-schemas` and check the results with `openspec schema which`
+- [x] 8.2 After pushing, in a scratch OpenSpec project, run each README command via `npx github:jieli-matrix/openspec-schemas` and check the results with `openspec schema which`
 - [ ] 8.3 Push a trivial commit and re-run `npx github:jieli-matrix/openspec-schemas list` to see whether npx picks up the new commit. If it is stale, document the workaround in the README
