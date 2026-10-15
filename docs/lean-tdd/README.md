@@ -50,4 +50,4 @@ The Lean TDD approach and original to-do list example come from [*Lean TDD: TDD 
 
 The schema is forked from OpenSpec's `spec-driven` schema at [`79b6aa9`](https://github.com/Fission-AI/OpenSpec/commit/79b6aa9c98f1e36795b2bc4ef2a8f770c6d3a777). The artifact IDs, artifact graph, apply tracking, and proposal artifact are unchanged. This repository is MIT licensed; see [LICENSE](../../LICENSE). That license does not license the book.
 
-For the adaptation's background, see the [Lean TDD working model](explorations/lean-tdd-insights.md), [schema options](explorations/lean-tdd-schema-options.md), [implementation change](../../openspec/changes/archive/2026-10-15-create-lean-tdd-community-schema/design.md), and [acceptance-test focus change](../../openspec/changes/archive/2026-10-15-focus-lean-tdd-on-acceptance-tests/design.md).
+For the adaptation's background, see the [Lean TDD working model](explorations/lean-tdd-insights.md) and [schema options](explorations/lean-tdd-schema-options.md).
