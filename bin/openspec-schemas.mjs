@@ -1,9 +1,9 @@
 #!/usr/bin/env node
 
 import { spawnSync } from 'node:child_process';
-import { cpSync, existsSync, mkdirSync, readdirSync, readFileSync, statSync } from 'node:fs';
+import { cpSync, existsSync, mkdirSync, readdirSync, readFileSync, rmSync, statSync } from 'node:fs';
 import { homedir } from 'node:os';
-import { dirname, join, resolve } from 'node:path';
+import { dirname, join, relative, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { parseArgs } from 'node:util';
 
@@ -13,6 +13,8 @@ const usage = `Usage:
   openspec-schemas list
   openspec-schemas install <schema>... [--dir <project> | --user]
   openspec-schemas install --all [--dir <project> | --user]
+  openspec-schemas update <schema>... [--dir <project> | --user]
+  openspec-schemas update --all [--dir <project> | --user]
   openspec-schemas new <schema> <change> [--dir <project>]
 Source: ${repository}`;
 
@@ -55,7 +57,7 @@ function projectDir(dir) {
   return project;
 }
 
-// Installed schemas are never overwritten; updating them is left to the user.
+// Installed schemas are never overwritten; `update` replaces them.
 function install(names, target) {
   mkdirSync(target, { recursive: true });
   for (const name of names) {
@@ -67,6 +69,39 @@ function install(names, target) {
     cpSync(join(catalog, name), destination, { recursive: true });
     console.log(`Installed ${name} to ${destination}`);
   }
+}
+
+function sameTree(a, b) {
+  const list = (dir) => readdirSync(dir, { recursive: true, withFileTypes: true })
+    .filter((entry) => entry.isFile())
+    .map((entry) => relative(dir, join(entry.parentPath, entry.name)))
+    .sort();
+  const files = list(a);
+  return files.join('\n') === list(b).join('\n')
+    && files.every((file) => readFileSync(join(a, file)).equals(readFileSync(join(b, file))));
+}
+
+// Replaces installed schemas with the catalog copy; returns false if a named one is missing.
+function update(names, target, { all }) {
+  let ok = true;
+  for (const name of names) {
+    const destination = join(target, name);
+    if (!existsSync(destination)) {
+      if (!all) {
+        console.error(`${name} is not installed at ${target}; run install first`);
+        ok = false;
+      }
+      continue;
+    }
+    if (sameTree(destination, join(catalog, name))) {
+      console.log(`${name} is up to date`);
+      continue;
+    }
+    rmSync(destination, { recursive: true, force: true });
+    cpSync(join(catalog, name), destination, { recursive: true });
+    console.log(`Updated ${name} at ${destination}`);
+  }
+  return ok;
 }
 
 let parsed;
@@ -93,10 +128,12 @@ if (command === 'list' && !args.length) {
   const names = schemaNames();
   const width = Math.max(...names.map((name) => name.length));
   for (const name of names) console.log(`${name.padEnd(width)}  ${description(name)}`);
-} else if (command === 'install' && !(values.user && values.dir) && Boolean(values.all) !== Boolean(args.length)) {
+} else if (['install', 'update'].includes(command) && !(values.user && values.dir) && Boolean(values.all) !== Boolean(args.length)) {
   const names = values.all ? schemaNames() : args;
   requireKnown(names);
-  install(names, values.user ? userSchemasDir() : join(projectDir(values.dir), 'openspec', 'schemas'));
+  const target = values.user ? userSchemasDir() : join(projectDir(values.dir), 'openspec', 'schemas');
+  if (command === 'install') install(names, target);
+  else if (!update(names, target, { all: values.all })) process.exit(1);
 } else if (command === 'new' && args.length === 2 && !values.all && !values.user && /^[a-z0-9][a-z0-9-]*$/.test(args[1])) {
   const [schema, change] = args;
   requireKnown([schema]);

@@ -154,6 +154,57 @@ test('install rejects --user together with --dir', () => {
   assert.equal(existsSync(schemasIn(project)), false);
 });
 
+// An installed copy that differs from the catalog, including a file the
+// catalog no longer has.
+function installOutdated(schemas, name) {
+  cpSync(join(catalog, name), join(schemas, name), { recursive: true });
+  writeFileSync(join(schemas, name, 'schema.yaml'), 'old\n');
+  writeFileSync(join(schemas, name, 'removed.md'), 'gone upstream\n');
+}
+
+test('update replaces an outdated project copy with the catalog', () => {
+  const { project, env } = setup();
+  installOutdated(schemasIn(project), 'lean-tdd');
+  const result = run(['update', 'lean-tdd'], { cwd: project, env });
+  assert.equal(result.status, 0, result.stderr);
+  assertSameTree(join(schemasIn(project), 'lean-tdd'), join(catalog, 'lean-tdd'));
+  assert.match(result.stdout, /Updated lean-tdd/);
+});
+
+test('update reports a current copy as up to date', () => {
+  const { project, env } = setup();
+  assert.equal(run(['install', 'lean-tdd'], { cwd: project, env }).status, 0);
+  const result = run(['update', 'lean-tdd'], { cwd: project, env });
+  assert.equal(result.status, 0, result.stderr);
+  assert.match(result.stdout, /lean-tdd is up to date/);
+});
+
+test('update --user replaces the user-level copy', () => {
+  const { project, data, env } = setup();
+  const schemas = join(data, 'openspec', 'schemas');
+  installOutdated(schemas, 'lean-tdd');
+  const result = run(['update', 'lean-tdd', '--user'], { cwd: project, env });
+  assert.equal(result.status, 0, result.stderr);
+  assertSameTree(join(schemas, 'lean-tdd'), join(catalog, 'lean-tdd'));
+});
+
+test('update reports a schema that is not installed', () => {
+  const { project, env } = setup();
+  const result = run(['update', 'lean-tdd'], { cwd: project, env });
+  assert.notEqual(result.status, 0);
+  assert.match(result.stderr, /lean-tdd is not installed.*install/);
+  assert.equal(existsSync(join(schemasIn(project), 'lean-tdd')), false);
+});
+
+test('update --all updates only installed schemas', () => {
+  const { project, env } = setup();
+  installOutdated(schemasIn(project), 'lean-tdd');
+  const result = run(['update', '--all'], { cwd: project, env });
+  assert.equal(result.status, 0, result.stderr);
+  assertSameTree(join(schemasIn(project), 'lean-tdd'), join(catalog, 'lean-tdd'));
+  assert.deepEqual(readdirSync(schemasIn(project)), ['lean-tdd']);
+});
+
 const realOpenspec = spawnSync('openspec', ['--version'], { encoding: 'utf8' }).status === 0;
 
 test('OpenSpec resolves a user-level install from a bare project', { skip: !realOpenspec && 'openspec not on PATH' }, () => {

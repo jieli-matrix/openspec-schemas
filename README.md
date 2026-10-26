@@ -25,12 +25,15 @@ npx github:jieli-matrix/openspec-schemas install --all
 # Install every schema once for all your projects (recommended for --all)
 npx github:jieli-matrix/openspec-schemas install --all --user
 
+# Replace installed copies with the latest catalog version (add --user for the user-level copy)
+npx github:jieli-matrix/openspec-schemas update lean-tdd
+
 # Install a schema if needed, then run `openspec new change my-change --schema lean-tdd`
 npx github:jieli-matrix/openspec-schemas new lean-tdd my-change
 ```
 
 - `--dir <path>` targets another project; `--user` installs to `~/.local/share/openspec/schemas` (or `$XDG_DATA_HOME/openspec/schemas`).
-- Installed schemas are skipped, never overwritten, and your default schema is left unchanged.
+- Run commands from the project root, where you ran `openspec init`. `install` skips installed schemas; `update` replaces them. Your default schema is left unchanged.
 
 ## License
 
