@@ -139,22 +139,17 @@ artifacts:
     template: design.md
     instruction: |
       Write design.md after the delta specs, following the template in
-      bullets and code blocks. It reviews the module boundaries the change
-      touches, starting with the API the acceptance tests call.
+      bullets and code blocks. It shows a reviewer the module boundaries the
+      change touches, starting with the API the acceptance tests call, so
+      they can see what the change builds and consider a better design. A
+      first draft is expected; make each boundary concrete enough to
+      question.
 
-      Module boundaries:
-      - A boundary is any function, class, module, package, client, or
-        service. After the public API, list only the internal boundaries
-        whose design decisions matter to this change.
-      - Review the public API as a caller would. If it shows a missing or
-        awkward rule, revise the specs and design together.
-      - Prefer extending an existing module to adding one. A new boundary
-        must hide more than its interface exposes; otherwise fold it into
-        its caller.
-      - Before writing tasks, fix these: the same knowledge in two modules,
-        callers that must call things in a set order, pass-through methods
-        or wrappers, and special cases or flags in a general-purpose module.
-      - The acceptance tests cover every boundary listed here.
+      Module boundaries: a boundary is any function, class, module, package,
+      client, or service. After the public API, list only the internal
+      boundaries whose design decisions matter to this change. If the public
+      API's usage shows a missing or awkward rule, revise the specs too. The
+      acceptance tests cover every boundary listed here.
 
       Test boundaries: use the testing trophy
       (https://kentcdodds.com/blog/the-testing-trophy-and-testing-classifications)
