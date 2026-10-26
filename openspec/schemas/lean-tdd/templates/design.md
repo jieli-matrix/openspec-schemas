@@ -1,21 +1,17 @@
 # Design
 
-## API by criterion
-
-### <!-- requirement name, in spec order -->
-
-<!-- How the scenarios call the API: setup, focal call, observation. -->
-
-```text
-```
-
-- <!-- `call(inputs)` -> output; errors; new or existing -->
-
 ## Module boundaries
 
 **Net complexity:** <!-- modules, dependencies, and concepts added; what is removed -->
 
-### <!-- `Boundary` (new or existing) -->
+### <!-- `PublicApi` (public, new or existing): the API the acceptance tests call -->
+
+- **Usage:** <!-- setup, focal, and observation calls the scenarios make, naming each focal call's criterion -->
+- **Hides:** <!-- knowledge or decisions callers no longer need -->
+- **Abstraction:** <!-- the one concept the interface presents -->
+- **Specifics:** <!-- details kept out, and the layer that owns them -->
+
+### <!-- `Boundary` (internal, new or existing): only if its design decisions matter -->
 
 - **Usage:** <!-- caller-side code -->
 - **Hides:** <!-- knowledge or decisions callers no longer need -->

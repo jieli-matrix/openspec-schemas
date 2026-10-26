@@ -38,13 +38,13 @@ def test_adding_an_item_increases_count():
     assert not items.empty()
 ```
 
-The test calls two other public methods: `count()` to observe the number of items and `empty()` to observe whether the list has any. They are not separate requirements and get no tests of their own. Design lists them under the criterion; stub all three so the test runs, see it fail, then implement them until it passes. The second scenario, Another item, makes sure a hardcoded `count()` cannot pass. See the [spec](examples/sample-change/specs/todo-items/spec.md), [design](examples/sample-change/design.md), and [tasks](examples/sample-change/tasks.md) for the complete example.
+The test calls two other public methods: `count()` to observe the number of items and `empty()` to observe whether the list has any. They are not separate requirements and get no tests of their own. Design reviews them as part of the `TodoList` interface; stub all three so the test runs, see it fail, then implement them until it passes. The second scenario, Another item, makes sure a hardcoded `count()` cannot pass. See the [spec](examples/sample-change/specs/todo-items/spec.md), [design](examples/sample-change/design.md), and [tasks](examples/sample-change/tasks.md) for the complete example.
 
 Requirement headings carry plain outcome names. `AC-1`, `AC-2`, and so on are positions within one change and appear only in its `tasks.md`, so the main spec stays readable after archive.
 
 The [testing trophy](https://kentcdodds.com/blog/the-testing-trophy-and-testing-classifications) helps choose the test boundary for each criterion: the system public API usually exercises the interacting parts. A focused lower-level test is an exception for complex logic the acceptance test cannot isolate. The schema does not require a UI harness or a test ratio.
 
-Passing tests do not show where knowledge lives, so design.md also reviews the internal module boundaries behind the tested API. It opens with one line on the complexity the change adds and removes. Then, for each boundary that matters, it shows how a caller uses it, what it hides, the concept it presents, and which layer owns the specific details. Boundaries get no tests of their own; the acceptance tests cover them. The to-do example adds no internal boundary, so its section is just that one line.
+Passing tests do not show where knowledge lives, so design.md reviews the change as module boundaries. It opens with one line on the complexity the change adds and removes. It then starts with the public API the acceptance tests call and adds only the internal boundaries that matter. For each, it shows how a caller uses it, what it hides, the concept it presents, and which layer owns the specific details. Boundaries get no tests of their own; the acceptance tests cover them. The to-do example has one boundary, the public `TodoList`, and no internal ones.
 
 ## Attribution and license
 

@@ -1,28 +1,24 @@
 # Design
 
-## API by criterion
-
-### Adding an item increases the count
-
-The focal call is `add_item()`. The scenarios observe its effect through `count()` and `empty()`. All three are new.
-
-```text
-items = TodoList()
-items.count()             -> 0
-items.empty()             -> true
-items.add_item("buy milk")
-items.count()             -> 1
-items.empty()             -> false
-```
-
-- `TodoList()` -> an empty list; no errors.
-- `add_item(text)` -> nothing; no errors in this change.
-- `count()` -> the number of items; no errors.
-- `empty()` -> true exactly when `count()` is zero; no errors.
-
 ## Module boundaries
 
 **Net complexity:** adds one class, `TodoList`, with three methods. No new dependencies and no internal boundaries.
+
+### `TodoList` (public, new)
+
+- **Usage:**
+  ```python
+  items = TodoList()
+  items.count()               # -> 0
+  items.empty()               # -> True
+  items.add_item("buy milk")  # Adding an item increases the count
+  items.count()               # -> 1
+  items.empty()               # -> False
+  ```
+  No call raises in this change.
+- **Hides:** how items are stored. Callers never touch the collection or keep their own count, and `empty()` reads the same storage as `count()`, so the two cannot disagree.
+- **Abstraction:** a to-do list that holds items by their text.
+- **Specifics:** none yet. A rule about item text, such as rejecting blank items, would belong in `add_item()`, not in its callers.
 
 ## Test boundaries
 

@@ -2,8 +2,8 @@
 # Kept from upstream on purpose: artifact IDs, generated paths, the requires
 # graph, apply tracking, the proposal artifact, delta-spec syntax, and the
 # checkbox format. Everything else is rewritten for Lean TDD: specs hold only
-# acceptance criteria, design reviews the API their tests call and the module
-# boundaries behind it, tasks follow the spec order, and apply holds the only
+# acceptance criteria, design reviews the module boundaries starting with the
+# API their tests call, tasks follow the spec order, and apply holds the only
 # copy of the test-first loop.
 name: lean-tdd
 version: 1
@@ -135,30 +135,29 @@ artifacts:
 
   - id: design
     generates: design.md
-    description: The API the acceptance tests call, the module boundaries behind it, and test boundaries
+    description: The module boundaries a change touches, starting with the API the acceptance tests call, and test boundaries
     template: design.md
     instruction: |
-      Write design.md after the delta specs, organized by their acceptance
-      criteria. It reviews the API the acceptance tests call and the module
-      boundaries behind it; it is not an architecture overview. Use bullets
-      and code blocks, not tables.
+      Write design.md after the delta specs. It reviews the module boundaries
+      the change touches, starting with the API the acceptance tests call; it
+      is not an architecture overview. Use bullets and code blocks, not
+      tables.
 
       Sections:
-      - **API by criterion**: for each requirement, in spec order, show how its
-        scenarios call the API as caller-side code: setup, the focal call, and
-        observation. Below the code, one bullet per call with its inputs,
-        output, errors, and whether it already exists. Review it as a caller
-        would. If the sketch shows a missing or awkward rule, revise the specs
-        and design together.
       - **Module boundaries**: open with a **Net complexity** line: the modules,
         dependencies, and concepts this change adds, and what it removes. Then
-        one subsection per internal boundary whose design decisions matter to
-        this change, headed by its code name and marked new or existing. A
-        boundary is any function, class, module, package, client, or service.
-        Leave out the API the acceptance tests call; API by criterion covers
-        it. Give each boundary four bullets:
+        one subsection per boundary, headed by its code name and marked public
+        or internal, new or existing. A boundary is any function, class,
+        module, package, client, or service. Start with the public API the
+        acceptance tests call, then add only the internal boundaries whose
+        design decisions matter to this change. Give each boundary four
+        bullets:
         - **Usage:** representative caller-side code, with results, errors,
-          and any order or coordination the caller must handle.
+          and any order or coordination the caller must handle. For the
+          public API, show the setup, focal, and observation calls the
+          scenarios make, and name the criterion each focal call serves.
+          Review it as a caller would; if it shows a missing or awkward
+          rule, revise the specs and design together.
         - **Hides:** the knowledge or decisions callers no longer need.
         - **Abstraction:** the one concept the interface presents, general
           enough to serve more than this feature.
