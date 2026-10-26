@@ -44,7 +44,7 @@ Requirement headings carry plain outcome names. `AC-1`, `AC-2`, and so on are po
 
 The [testing trophy](https://kentcdodds.com/blog/the-testing-trophy-and-testing-classifications) helps choose the test boundary for each criterion: the system public API usually exercises the interacting parts. A focused lower-level test is an exception for complex logic the acceptance test cannot isolate. The schema does not require a UI harness or a test ratio.
 
-Passing tests do not show where knowledge lives, so design.md reviews the change as module boundaries. It opens with one line on the complexity the change adds and removes. It then starts with the public API the acceptance tests call and adds only the internal boundaries that matter. For each, it shows how a caller uses it, what it hides, the concept it presents, and which layer owns the specific details. Boundaries get no tests of their own; the acceptance tests cover them. The to-do example has one boundary, the public `TodoList`, and no internal ones.
+Passing tests do not show where knowledge lives, so design.md reviews the change as module boundaries. It opens with one line on the complexity the change adds and removes. It then starts with the public API the acceptance tests call and adds only the internal boundaries that matter. For each, it shows how a caller uses it, what it hides, the concept it presents, and which layer owns the specific details. The acceptance tests cover every boundary. The to-do example has one boundary, the public `TodoList`, and no internal ones.
 
 ## Attribution and license
 
