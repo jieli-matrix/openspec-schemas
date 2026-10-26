@@ -15,12 +15,14 @@ items.count()             -> 1
 items.empty()             -> false
 ```
 
-| Call | Inputs | Output | Errors |
-| --- | --- | --- | --- |
-| `TodoList()` | none | empty list | none |
-| `add_item(text)` | item text | none | none in this change |
-| `count()` | none | number of items | none |
-| `empty()` | none | true exactly when `count()` is zero | none |
+- `TodoList()` -> an empty list; no errors.
+- `add_item(text)` -> nothing; no errors in this change.
+- `count()` -> the number of items; no errors.
+- `empty()` -> true exactly when `count()` is zero; no errors.
+
+## Module boundaries
+
+**Net complexity:** adds one class, `TodoList`, with three methods. No new dependencies and no internal boundaries.
 
 ## Test boundaries
 

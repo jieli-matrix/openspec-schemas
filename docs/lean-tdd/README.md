@@ -44,9 +44,11 @@ Requirement headings carry plain outcome names. `AC-1`, `AC-2`, and so on are po
 
 The [testing trophy](https://kentcdodds.com/blog/the-testing-trophy-and-testing-classifications) helps choose the test boundary for each criterion: the system public API usually exercises the interacting parts. A focused lower-level test is an exception for complex logic the acceptance test cannot isolate. The schema does not require a UI harness or a test ratio.
 
+Passing tests do not show where knowledge lives, so design.md also reviews the internal module boundaries behind the tested API. It opens with one line on the complexity the change adds and removes. Then, for each boundary that matters, it shows how a caller uses it, what it hides, the concept it presents, and which layer owns the specific details. Boundaries get no tests of their own; the acceptance tests cover them. The to-do example adds no internal boundary, so its section is just that one line.
+
 ## Attribution and license
 
-The Lean TDD approach and original to-do list example come from [*Lean TDD: TDD Without the Waste*](https://leantdd.com/) by Brian Okken. The book and its original examples are © 2026 Brian Okken. This repository is an independent adaptation of those ideas for OpenSpec; its maintainer is not the book's author.
+The Lean TDD approach and original to-do list example come from [*Lean TDD: TDD Without the Waste*](https://leantdd.com/) by Brian Okken. The book and its original examples are © 2026 Brian Okken. This repository is an independent adaptation of those ideas for OpenSpec; its maintainer is not the book's author. The module-boundary review follows David Parnas's information hiding and John Ousterhout's *A Philosophy of Software Design*.
 
 The schema is forked from OpenSpec's `spec-driven` schema at [`79b6aa9`](https://github.com/Fission-AI/OpenSpec/commit/79b6aa9c98f1e36795b2bc4ef2a8f770c6d3a777). The artifact IDs, artifact graph, apply tracking, and proposal artifact are unchanged. This repository is MIT licensed; see [LICENSE](../../LICENSE). That license does not license the book.
 
