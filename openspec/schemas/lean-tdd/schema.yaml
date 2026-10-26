@@ -151,11 +151,10 @@ artifacts:
       API's usage shows a missing or awkward rule, revise the specs too. The
       acceptance tests cover every boundary listed here.
 
-      Test boundaries: use the testing trophy
-      (https://kentcdodds.com/blog/the-testing-trophy-and-testing-classifications)
-      as a guide: public API or integration tests carry most criteria; UI or
-      end-to-end tests are for UI behavior; static checks run throughout. No
-      fixed ratio.
+      Test boundaries: the test level for each criterion (public function,
+      CLI, HTTP, UI) and why. Use the testing trophy as a guide: public API
+      or integration tests carry most criteria; UI or end-to-end tests are
+      for UI behavior; static checks run throughout. No fixed ratio.
 
       Point to the proposal for motivation and to the specs for rules instead
       of restating them. If a question would change the specs, the API, or
