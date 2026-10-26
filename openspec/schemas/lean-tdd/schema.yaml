@@ -2,8 +2,9 @@
 # Kept from upstream on purpose: artifact IDs, generated paths, the requires
 # graph, apply tracking, the proposal artifact, delta-spec syntax, and the
 # checkbox format. Everything else is rewritten for Lean TDD: specs hold only
-# acceptance criteria, design reviews the API their tests call, tasks follow
-# the spec order, and apply holds the only copy of the test-first loop.
+# acceptance criteria, design reviews the API their tests call and the module
+# boundaries behind it, tasks follow the spec order, and apply holds the only
+# copy of the test-first loop.
 name: lean-tdd
 version: 1
 description: OpenSpec artifacts for a Lean TDD cycle driven by acceptance criteria
@@ -134,19 +135,41 @@ artifacts:
 
   - id: design
     generates: design.md
-    description: The API the acceptance tests call and their test boundaries
+    description: The API the acceptance tests call, the module boundaries behind it, and test boundaries
     template: design.md
     instruction: |
       Write design.md after the delta specs, organized by their acceptance
-      criteria. It reviews the API the acceptance tests call; it is not an
-      architecture overview.
+      criteria. It reviews the API the acceptance tests call and the module
+      boundaries behind it; it is not an architecture overview. Use bullets
+      and code blocks, not tables.
 
       Sections:
-      - **API by criterion**: for each requirement, in spec order, the focal
-        call and the setup and observation calls its scenarios use: names,
-        inputs, outputs, errors, and types. Mark calls that already exist.
-        Review them as a caller would. If the sketch shows a missing or
-        awkward rule, revise the specs and design together.
+      - **API by criterion**: for each requirement, in spec order, show how its
+        scenarios call the API as caller-side code: setup, the focal call, and
+        observation. Below the code, one bullet per call with its inputs,
+        output, errors, and whether it already exists. Review it as a caller
+        would. If the sketch shows a missing or awkward rule, revise the specs
+        and design together.
+      - **Module boundaries**: open with a **Net complexity** line: the modules,
+        dependencies, and concepts this change adds, and what it removes. Then
+        one subsection per internal boundary whose design decisions matter to
+        this change, headed by its code name and marked new or existing. A
+        boundary is any function, class, module, package, client, or service.
+        Leave out the API the acceptance tests call; API by criterion covers
+        it. Give each boundary four bullets:
+        - **Usage:** representative caller-side code, with results, errors,
+          and any order or coordination the caller must handle.
+        - **Hides:** the knowledge or decisions callers no longer need.
+        - **Abstraction:** the one concept the interface presents, general
+          enough to serve more than this feature.
+        - **Specifics:** the feature- or implementation-specific details kept
+          out of this interface, and the layer that owns them.
+        Prefer extending an existing module to adding one. A new boundary must
+        hide more than its interface exposes; otherwise fold it into its
+        caller. Before writing tasks, fix these: the same knowledge in two
+        modules, callers that must call things in a set order, pass-through
+        methods or wrappers, and special cases or flags in a general-purpose
+        module. A boundary listed here needs no test of its own.
       - **Test boundaries**: the test level for each criterion (public
         function, CLI, HTTP, UI) and why. Use the testing trophy
         (https://kentcdodds.com/blog/the-testing-trophy-and-testing-classifications)
@@ -193,6 +216,8 @@ artifacts:
       prerequisites first. Do not add tasks that test the setup or observation
       APIs on their own, and do not add separate testing or documentation
       groups. Work a criterion needs, docs included, goes in its own group.
+      A module boundary from design.md gets no task of its own; building it
+      is part of the first scenario task that needs it.
 
       Checkbox tracking: follow the template exactly. Apply parses
       `- [ ] X.Y description`; a box holding only `x` (either case, any
@@ -222,15 +247,19 @@ apply:
           an observation call before the focal call. Import, syntax, and type
           errors do not. Report the command and a short failure summary in chat.
        d. Implement the simplest sound behavior for everything the scenario
-          calls. Rerun the focused test and the baseline suites.
-       e. Refactor after green only when it removes duplication or clarifies
-          structure, then rerun.
+          calls, behind the module boundaries in design.md. Rerun the focused
+          test and the baseline suites.
+       e. Refactor after green only when it removes duplication, clarifies
+          structure, keeps knowledge behind the boundary that owns it, or
+          moves a specific detail to its layer, then rerun.
     3. Add a lower-level test only when the acceptance test cannot isolate
        complex logic or gives feedback too slowly, and say why in chat. An API
-       existing is not a reason to test it on its own.
+       or module boundary existing is not a reason to test it on its own.
     4. If a failure reveals a new user-observable outcome, add or revise the
        requirement and its scenarios first, then design and tasks, then
-       continue.
+       continue. If the implementation needs a boundary design.md does not
+       list, or must break one, update its Module boundaries first and say
+       why in chat.
     5. If an automated red run is impractical, explain why and give
        alternative evidence.
     6. In the final regression task, separate preexisting failures from new
