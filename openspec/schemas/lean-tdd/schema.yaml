@@ -234,7 +234,11 @@ apply:
        continue. If the implementation needs a boundary design.md does not
        list, or must break one, update its Module boundaries first and say
        why in chat.
-    5. If an automated red run is impractical, explain why and give
+    5. Write READMEs and code comments at the interface: what a module
+       offers, how to call it, and the abstraction it presents. Design
+       reasoning stays in design.md, and implementation details stay in
+       the code.
+    6. If an automated red run is impractical, explain why and give
        alternative evidence.
-    6. In the final regression task, separate preexisting failures from new
+    7. In the final regression task, separate preexisting failures from new
        regressions.
